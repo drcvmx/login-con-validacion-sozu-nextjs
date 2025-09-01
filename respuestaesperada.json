@@ -1,0 +1,158 @@
+{
+    "resultado_json": {
+        "usuario": {
+            "email": "admin@sozu.com",
+            "nombre": "Carlos Pérez",
+            "telefono": "5551234567",
+            "clave_pais_telefono": "+52",
+            "activo": true,
+            "rol": {
+                "id": 1,
+                "nombre": "Administrador",
+                "descripcion": "Acceso completo al sistema",
+                "activo": true,
+                "menus": [
+                    {
+                        "id": 1,
+                        "nombre": "Dashboard",
+                        "activo": true,
+                        "submenus": [
+                            {
+                                "id": 7,
+                                "nombre": "Ver estadisticas",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 1,
+                                        "nombre": "VER_REPORTES",
+                                        "descripcion": "Permite visualizar reportes",
+                                        "activo": true
+                                    }
+                                ]
+                            },
+                            {
+                                "id": 8,
+                                "nombre": "Ver actividad",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 1,
+                                        "nombre": "VER_REPORTES",
+                                        "descripcion": "Permite visualizar reportes",
+                                        "activo": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "nombre": "Usuarios",
+                        "activo": true,
+                        "submenus": [
+                            {
+                                "id": 1,
+                                "nombre": "Crear Usuario",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 2,
+                                        "nombre": "EDITAR_USUARIOS",
+                                        "descripcion": "Permite crear y modificar usuarios",
+                                        "activo": true
+                                    }
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "nombre": "Editar Usuario",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 2,
+                                        "nombre": "EDITAR_USUARIOS",
+                                        "descripcion": "Permite crear y modificar usuarios",
+                                        "activo": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "nombre": "Proyectos",
+                        "activo": true,
+                        "submenus": [
+                            {
+                                "id": 3,
+                                "nombre": "Crear Proyecto",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 3,
+                                        "nombre": "GESTIONAR_PROYECTOS",
+                                        "descripcion": "Permite crear y modificar proyectos",
+                                        "activo": true
+                                    }
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "nombre": "Ver Proyecto",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 3,
+                                        "nombre": "GESTIONAR_PROYECTOS",
+                                        "descripcion": "Permite crear y modificar proyectos",
+                                        "activo": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "nombre": "Reportes",
+                        "activo": true,
+                        "submenus": [
+                            {
+                                "id": 5,
+                                "nombre": "Reporte Mensual",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 1,
+                                        "nombre": "VER_REPORTES",
+                                        "descripcion": "Permite visualizar reportes",
+                                        "activo": true
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "nombre": "Finanzas",
+                        "activo": true,
+                        "submenus": [
+                            {
+                                "id": 6,
+                                "nombre": "Reporte Financiero",
+                                "activo": true,
+                                "permisos": [
+                                    {
+                                        "id": 4,
+                                        "nombre": "ACCEDER_FINANZAS",
+                                        "descripcion": "Permite ver reportes financieros",
+                                        "activo": true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}
