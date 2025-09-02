@@ -4,36 +4,7 @@ import type React from "react"
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-
-interface Usuario {
-  email: string
-  nombre: string
-  telefono: string
-  clave_pais_telefono: string
-  activo: boolean
-  rol: {
-    id: number
-    nombre: string
-    descripcion: string
-    activo: boolean
-    menus: Array<{
-      id: number
-      nombre: string
-      activo: boolean
-      submenus: Array<{
-        id: number
-        nombre: string
-        activo: boolean
-        permisos: Array<{
-          id: number
-          nombre: string
-          descripcion: string
-          activo: boolean
-        }>
-      }>
-    }>
-  }
-}
+import type { Usuario, Proyecto } from "@/types"
 
 interface AuthContextType {
   usuario: Usuario | null
@@ -41,6 +12,7 @@ interface AuthContextType {
   logout: () => void
   refreshAuth: () => void
   hasPermission: (permissionName: string) => boolean
+  proyectos: Proyecto[]
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -64,15 +36,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const parsedData = JSON.parse(userData)
 
         let userToSet = null
-        if (parsedData.resultado_json && parsedData.resultado_json.usuario) {
-          userToSet = parsedData.resultado_json.usuario
-        } else if (parsedData.usuario) {
+        // Nuevo formato: { usuario: {...} } con proyectos_acceso
+        if (parsedData.usuario) {
           userToSet = parsedData.usuario
-        } else if (parsedData.email) {
+        }
+        // Formato legacy: { resultado_json: { usuario: {...} } }
+        else if (parsedData.resultado_json && parsedData.resultado_json.usuario) {
+          userToSet = parsedData.resultado_json.usuario
+        }
+        // Formato directo: { email: ..., nombre: ... }
+        else if (parsedData.email) {
           userToSet = parsedData
         }
 
         if (userToSet) {
+          // Asegurar que proyectos_acceso existe como array vacío si no está presente
+          if (!userToSet.proyectos_acceso) {
+            userToSet.proyectos_acceso = []
+          }
+          // Asegurar que propiedades_disponibles existe como array vacío si no está presente
+          if (!userToSet.propiedades_disponibles) {
+            userToSet.propiedades_disponibles = []
+          }
           setUsuario(userToSet)
         }
       } catch (error) {
@@ -150,34 +135,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const refreshAuth = () => {
     setLoading(true)
-    const userData = localStorage.getItem("userData")
-
-    if (userData) {
-      try {
-        const parsedData = JSON.parse(userData)
-        let userToSet = null
-        if (parsedData.resultado_json && parsedData.resultado_json.usuario) {
-          userToSet = parsedData.resultado_json.usuario
-        } else if (parsedData.usuario) {
-          userToSet = parsedData.usuario
-        } else if (parsedData.email) {
-          userToSet = parsedData
-        }
-        if (userToSet) {
-          setUsuario(userToSet)
-        }
-      } catch (error) {
-        console.error("Error parsing user data:", error)
-        localStorage.removeItem("userData")
-        setUsuario(null)
-      }
-    } else {
-      setUsuario(null)
-    }
-    setLoading(false)
+    loadUserData()
   }
 
-  return <AuthContext.Provider value={{ usuario, loading, logout, refreshAuth, hasPermission }}>{children}</AuthContext.Provider>
+  const proyectos = usuario?.proyectos_acceso || []
+
+  return <AuthContext.Provider value={{ usuario, loading, logout, refreshAuth, hasPermission, proyectos }}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

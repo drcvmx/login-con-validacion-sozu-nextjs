@@ -46,15 +46,19 @@ export default function LoginPage() {
       // Manejar diferentes formatos de respuesta
       let userData = null
       
-      if (Array.isArray(data) && data.length > 0 && data[0].resultado_json) {
-        // Formato: [{ resultado_json: { usuario: {...} } }]
-        userData = data[0]
+      if (Array.isArray(data) && data.length > 0) {
+        // Formato array: [{ resultado_json: { usuario: {...} } }]
+        if (data[0].resultado_json) {
+          userData = data[0]
+        } else if (data[0].usuario) {
+          userData = data[0]
+        }
       } else if (data.resultado_json && data.resultado_json.usuario) {
-        // Formato: { resultado_json: { usuario: {...} } }
+        // Formato legacy: { resultado_json: { usuario: {...} } }
         userData = data
       } else if (data.usuario) {
-        // Formato: { usuario: {...} }
-        userData = { resultado_json: data }
+        // Formato nuevo: { usuario: {..., proyectos_acceso: [...] } }
+        userData = data
       } else {
         console.error("Formato de respuesta no reconocido:", data)
         throw new Error("El servidor devolvió un formato de datos no válido")
@@ -67,8 +71,10 @@ export default function LoginPage() {
       console.error("Login error:", err)
       if (err instanceof TypeError && err.message.includes('fetch')) {
         setError("No se pudo conectar al servidor. Verifica tu conexión a internet.")
-      } else {
+      } else if (err instanceof Error) {
         setError(`Error al iniciar sesión: ${err.message}`)
+      } else {
+        setError("Error desconocido al iniciar sesión")
       }
     } finally {
       setLoading(false)
@@ -79,7 +85,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 bg-teal-500 rounded-xl flex items-center justify-center">
+          <div className="mx-auto w-16 h-16 bg-primary rounded-xl flex items-center justify-center">
             <span className="text-2xl font-bold text-white">S</span>
           </div>
           <div>
@@ -110,7 +116,7 @@ export default function LoginPage() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white" disabled={loading}>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-white" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

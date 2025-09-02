@@ -1,0 +1,951 @@
+[
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Norte",
+      "modelo": "MODELO: Departamento 1 Recámara",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 1,
+      "banos": 1,
+      "caracteristicas": "Balcón, Elevador, Cocina integral"
+    },
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Norte",
+      "modelo": "MODELO: Departamento 2 Recámaras",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 2,
+      "banos": 2,
+      "caracteristicas": "Balcón, Elevador, Walk-in closet, Cocina integral"
+    },
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Norte",
+      "modelo": "MODELO: Local Comercial",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 0,
+      "banos": 0,
+      "caracteristicas": "Seguridad 24/7, Elevador"
+    },
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Sur",
+      "modelo": "MODELO: Departamento 2 Recámaras",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 2,
+      "banos": 2,
+      "caracteristicas": "Balcón, Elevador, Walk-in closet, Cocina integral"
+    },
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Sur",
+      "modelo": "MODELO: Departamento 3 Recámaras",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 3,
+      "banos": 2,
+      "caracteristicas": "Balcón, Terraza, Cuarto de servicio, Walk-in closet, Cocina integral"
+    },
+    {
+      "info": "USUARIO: Dante Chavez",
+      "proyecto": "PROYECTO: Vive Daiku",
+      "edificio": "EDIFICIO: Residencial Sur",
+      "modelo": "MODELO: Local Comercial",
+      "acceso_usuario": "✅ TIENE ACCESO",
+      "proyecto_edificio_ok": "✅",
+      "edificio_modelo_ok": "✅",
+      "recamaras": 0,
+      "banos": 0,
+      "caracteristicas": "Seguridad 24/7, Elevador"
+    }
+  ]
+
+  [
+    {
+      "usuario": {
+        "email": "jorge.mendoza@sozu.com",
+        "nombre": "Jorge Mendoza",
+        "telefono": "7221545856",
+        "clave_pais_telefono": "+52",
+        "activo": true,
+        "rol": {
+          "id": 1,
+          "nombre": "Super Administrador",
+          "descripcion": "Acceso completo al sistema",
+          "activo": true,
+          "menus": [
+            {
+              "id": 1,
+              "nombre": "Entidades",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 1,
+                  "nombre": "Administración de clientes",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "nombre": "Administración de empresas",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "id": 3,
+                  "nombre": "Administración de notarios",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "nombre": "Usuarios",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 4,
+                  "nombre": "Administración de usuarios",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "nombre": "Propiedades",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 5,
+                  "nombre": "Administración de proyectos",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 5,
+                      "nombre": "Cargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "id": 6,
+                  "nombre": "Administración de propiedades",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 5,
+                      "nombre": "Cargar información",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 6,
+                      "nombre": "Generar oferta",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "nombre": "Productos/Servicios",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 7,
+                  "nombre": "Administración de productos/servicios",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 5,
+                      "nombre": "Cargar información",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 6,
+                      "nombre": "Generar oferta",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "nombre": "Cuentas de cobranza",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 8,
+                  "nombre": "Administración de cuentas de cobranza",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "id": 10,
+                  "nombre": "Reportes",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "nombre": "Comisiones",
+              "activo": true,
+              "submenus": [
+                {
+                  "id": 9,
+                  "nombre": "Administración de comisiones",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 1,
+                      "nombre": "Agregar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 2,
+                      "nombre": "Eliminar",
+                      "descripcion": null,
+                      "activo": true
+                    },
+                    {
+                      "id": 3,
+                      "nombre": "Actualizar",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "id": 11,
+                  "nombre": "Reportes",
+                  "activo": true,
+                  "permisos": [
+                    {
+                      "id": 4,
+                      "nombre": "Descargar información",
+                      "descripcion": null,
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "proyectos_acceso": [
+          {
+            "proyecto_id": 1,
+            "nombre": "Margot",
+            "direccion": "Av. López Mateos Sur 2375, Jardines del Country, Guadalajara, Jal.",
+            "descripcion": "Desarrollo residencial premium en zona exclusiva de Guadalajara con amenidades de lujo",
+            "latitud": 20.6597,
+            "longitud": -103.3496,
+            "url_logo": "https://example.com/logo-torre-sozu.png",
+            "tipo_uso": "Residencial",
+            "fecha_inicio_construccion": "2024-01-15T00:00:00",
+            "precio_m2_actual": 45000,
+            "activo": true,
+            "edificios_count": 2,
+            "amenidades_count": 3
+          },
+          {
+            "proyecto_id": 2,
+            "nombre": "Bottura",
+            "direccion": "Av. Américas 1500, Providencia, Guadalajara, Jal.",
+            "descripcion": "Centro de negocios moderno con oficinas ejecutivas y espacios de coworking",
+            "latitud": 20.6767,
+            "longitud": -103.3475,
+            "url_logo": "https://example.com/logo-business-center.png",
+            "tipo_uso": "Comercial",
+            "fecha_inicio_construccion": "2024-03-01T00:00:00",
+            "precio_m2_actual": 38000,
+            "activo": true,
+            "edificios_count": 1,
+            "amenidades_count": 2
+          },
+          {
+            "proyecto_id": 3,
+            "nombre": "Vive Daiku",
+            "direccion": "Av. Patria 1891, Puerta de Hierro, Zapopan, Jal.",
+            "descripcion": "Complejo residencial mixto con áreas comerciales y espacios familiares",
+            "latitud": 20.6861,
+            "longitud": -103.4194,
+            "url_logo": "https://example.com/logo-residencial-zapopan.png",
+            "tipo_uso": "Mixto",
+            "fecha_inicio_construccion": "2024-06-01T00:00:00",
+            "precio_m2_actual": 52000,
+            "activo": true,
+            "edificios_count": 2,
+            "amenidades_count": 3
+          }
+        ],
+        "propiedades_disponibles": [
+          {
+            "modelo_id": 1,
+            "modelo_nombre": "Estudio Premium",
+            "descripcion": "Estudio moderno con cocina integral y balcón",
+            "recamaras": 0,
+            "banos_completos": 1,
+            "medio_banos": 1,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 1,
+            "edificio_nombre": "Torre A",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Cocina integral",
+              "Aire acondicionado"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/estudio-premium-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/estudio-premium-2.jpg"
+              },
+              {
+                "es_imagen": false,
+                "url": "https://example.com/modelos/estudio-premium-tour.mp4"
+              }
+            ]
+          },
+          {
+            "modelo_id": 2,
+            "modelo_nombre": "Departamento 1 Recámara",
+            "descripcion": "Departamento compacto ideal para jóvenes profesionales",
+            "recamaras": 1,
+            "banos_completos": 1,
+            "medio_banos": 0,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 1,
+            "edificio_nombre": "Torre A",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-2.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 3,
+            "modelo_nombre": "Departamento 2 Recámaras",
+            "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+            "recamaras": 2,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 1,
+            "edificio_nombre": "Torre A",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-2.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-3.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 5,
+            "modelo_nombre": "Penthouse 2 Niveles",
+            "descripcion": "Penthouse de lujo con terraza privada y jacuzzi",
+            "recamaras": 3,
+            "banos_completos": 3,
+            "medio_banos": 1,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 1,
+            "edificio_nombre": "Torre A",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Terraza",
+              "Jardín",
+              "Cuarto de servicio",
+              "Walk-in closet",
+              "Cocina integral",
+              "Vista al mar"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/penthouse-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/penthouse-terraza.jpg"
+              },
+              {
+                "es_imagen": false,
+                "url": "https://example.com/modelos/penthouse-tour.mp4"
+              }
+            ]
+          },
+          {
+            "modelo_id": 2,
+            "modelo_nombre": "Departamento 1 Recámara",
+            "descripcion": "Departamento compacto ideal para jóvenes profesionales",
+            "recamaras": 1,
+            "banos_completos": 1,
+            "medio_banos": 0,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 2,
+            "edificio_nombre": "Torre B",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-2.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 3,
+            "modelo_nombre": "Departamento 2 Recámaras",
+            "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+            "recamaras": 2,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 2,
+            "edificio_nombre": "Torre B",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-2.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-3.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 4,
+            "modelo_nombre": "Departamento 3 Recámaras",
+            "descripcion": "Departamento amplio para familias grandes",
+            "recamaras": 3,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 1,
+            "proyecto_nombre": "Margot",
+            "edificio_id": 2,
+            "edificio_nombre": "Torre B",
+            "edificio_pisos": "25   ",
+            "caracteristicas": [
+              "Balcón",
+              "Terraza",
+              "Cuarto de servicio",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": null
+          },
+          {
+            "modelo_id": 6,
+            "modelo_nombre": "Oficina Ejecutiva",
+            "descripcion": "Oficina individual con vista panorámica",
+            "recamaras": 0,
+            "banos_completos": 0,
+            "medio_banos": 1,
+            "proyecto_id": 2,
+            "proyecto_nombre": "Bottura",
+            "edificio_id": 3,
+            "edificio_nombre": "Edificio Principal",
+            "edificio_pisos": "15   ",
+            "caracteristicas": [
+              "Business center",
+              "Elevador",
+              "Aire acondicionado"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/oficina-ejecutiva.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 7,
+            "modelo_nombre": "Suite Ejecutiva",
+            "descripcion": "Suite de oficinas con sala de juntas privada",
+            "recamaras": 0,
+            "banos_completos": 1,
+            "medio_banos": 1,
+            "proyecto_id": 2,
+            "proyecto_nombre": "Bottura",
+            "edificio_id": 3,
+            "edificio_nombre": "Edificio Principal",
+            "edificio_pisos": "15   ",
+            "caracteristicas": [
+              "Business center",
+              "Elevador",
+              "Aire acondicionado"
+            ],
+            "multimedias": null
+          },
+          {
+            "modelo_id": 8,
+            "modelo_nombre": "Local Comercial",
+            "descripcion": "Espacio comercial en planta baja",
+            "recamaras": 0,
+            "banos_completos": 0,
+            "medio_banos": 1,
+            "proyecto_id": 2,
+            "proyecto_nombre": "Bottura",
+            "edificio_id": 3,
+            "edificio_nombre": "Edificio Principal",
+            "edificio_pisos": "15   ",
+            "caracteristicas": [
+              "Seguridad 24/7",
+              "Elevador"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/local-comercial.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 2,
+            "modelo_nombre": "Departamento 1 Recámara",
+            "descripcion": "Departamento compacto ideal para jóvenes profesionales",
+            "recamaras": 1,
+            "banos_completos": 1,
+            "medio_banos": 0,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 4,
+            "edificio_nombre": "Residencial Norte",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-1rec-2.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 3,
+            "modelo_nombre": "Departamento 2 Recámaras",
+            "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+            "recamaras": 2,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 4,
+            "edificio_nombre": "Residencial Norte",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-2.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-3.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 8,
+            "modelo_nombre": "Local Comercial",
+            "descripcion": "Espacio comercial en planta baja",
+            "recamaras": 0,
+            "banos_completos": 0,
+            "medio_banos": 1,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 4,
+            "edificio_nombre": "Residencial Norte",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Seguridad 24/7",
+              "Elevador"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/local-comercial.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 3,
+            "modelo_nombre": "Departamento 2 Recámaras",
+            "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+            "recamaras": 2,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 5,
+            "edificio_nombre": "Residencial Sur",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Balcón",
+              "Elevador",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-1.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-2.jpg"
+              },
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/depto-2rec-3.jpg"
+              }
+            ]
+          },
+          {
+            "modelo_id": 4,
+            "modelo_nombre": "Departamento 3 Recámaras",
+            "descripcion": "Departamento amplio para familias grandes",
+            "recamaras": 3,
+            "banos_completos": 2,
+            "medio_banos": 1,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 5,
+            "edificio_nombre": "Residencial Sur",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Balcón",
+              "Terraza",
+              "Cuarto de servicio",
+              "Walk-in closet",
+              "Cocina integral"
+            ],
+            "multimedias": null
+          },
+          {
+            "modelo_id": 8,
+            "modelo_nombre": "Local Comercial",
+            "descripcion": "Espacio comercial en planta baja",
+            "recamaras": 0,
+            "banos_completos": 0,
+            "medio_banos": 1,
+            "proyecto_id": 3,
+            "proyecto_nombre": "Vive Daiku",
+            "edificio_id": 5,
+            "edificio_nombre": "Residencial Sur",
+            "edificio_pisos": "12   ",
+            "caracteristicas": [
+              "Seguridad 24/7",
+              "Elevador"
+            ],
+            "multimedias": [
+              {
+                "es_imagen": true,
+                "url": "https://example.com/modelos/local-comercial.jpg"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
