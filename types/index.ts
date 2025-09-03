@@ -66,3 +66,120 @@ export interface Usuario {
   proyectos_acceso?: Proyecto[]
   propiedades_disponibles?: PropiedadDisponible[]
 }
+
+// Tipos para formularios CRUD
+export interface CreateUsuarioForm {
+  email: string
+  nombre: string
+  telefono: string
+  clave_pais_telefono: string
+  rol_id: number
+  activo?: boolean
+}
+
+export interface UpdateUsuarioForm {
+  nombre: string
+  telefono: string
+  clave_pais_telefono: string
+  rol_id: number
+  activo: boolean
+}
+
+export interface CreateProyectoForm {
+  nombre: string
+  direccion: string
+  descripcion: string
+  latitud: number
+  longitud: number
+  url_logo: string
+  id_tipo_uso: number
+  fecha_inicio_construccion: string
+  precio_m2_actual: number
+  activo?: boolean
+}
+
+export interface UpdateProyectoForm {
+  nombre: string
+  direccion: string
+  descripcion: string
+  latitud: number
+  longitud: number
+  url_logo: string
+  id_tipo_uso: number
+  fecha_inicio_construccion: string
+  precio_m2_actual: number
+  activo: boolean
+}
+
+export interface CreatePropiedadForm {
+  nombre: string
+  descripcion: string
+  numero_recamaras: number
+  numero_completo_banos: number
+  numero_medio_bano: number
+  activo?: boolean
+}
+
+export interface UpdatePropiedadForm {
+  nombre: string
+  descripcion: string
+  numero_recamaras: number
+  numero_completo_banos: number
+  numero_medio_bano: number
+  activo: boolean
+}
+
+// Tipos para respuestas de API
+export interface ApiResponse<T = any> {
+  success: boolean
+  data?: T
+  error?: string
+  message?: string
+}
+
+export interface CrudOperation {
+  entity: 'usuario' | 'proyecto' | 'propiedad'
+  operation: 'create' | 'update' | 'delete' | 'read'
+  data?: any
+  id?: string | number
+}
+
+export interface PropiedadBase {
+  propiedad_id: number;
+  numero_propiedad: string;
+  precio_lista: number;
+  m2_reales: number;
+  activo: boolean;
+  modelo_id: number;
+  modelo_nombre: string;
+  proyecto_id: number;
+  proyecto_nombre: string;
+  edificio_id: number;
+  edificio_nombre: string;
+  edificio_pisos?: string; // Hacer opcional
+}
+
+export interface ModeloPropiedad {
+  modelo_id: number;
+  recamaras: number;
+  banos_completos: number;
+  medio_banos: number;
+  descripcion: string;
+  caracteristicas: string[];
+  multimedias: Array<{
+    es_imagen: boolean;
+    url: string;
+  }>;
+}
+
+export interface PropiedadCompleta extends PropiedadBase {
+  recamaras: number;
+  banos_completos: number;
+  medio_banos: number;
+  descripcion: string;
+  caracteristicas: string[];
+  multimedias: Array<{
+    es_imagen: boolean;
+    url: string;
+  }>;
+}

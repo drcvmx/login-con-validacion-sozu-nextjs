@@ -73,7 +73,7 @@ export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps
       </div>
 
       {/* Navigation */}
-      <nav className="mt-8 px-6">
+      <nav className="mt-8 px-6 overflow-y-auto h-[calc(100vh-200px)]">
         {/* Dashboard siempre visible */}
         <button
           onClick={() => setActiveMenu("Dashboard")}
@@ -96,21 +96,38 @@ export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps
           const IconComponent = getMenuIcon(menu.nombre);
 
           return (
-            <button
-              key={menu.id}
-              onClick={() => setActiveMenu(menu.nombre)}
-              className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 mb-2 group ${
-                activeMenu === menu.nombre
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg scale-[1.02]"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:scale-[1.01] hover:shadow-md"
-              }`}
-            >
-              <IconComponent className="w-5 h-5 transition-transform group-hover:scale-110" />
-              <span className="font-medium">{menu.nombre}</span>
-              {activeMenu === menu.nombre && (
-                <div className="ml-auto w-2 h-2 bg-secondary rounded-full animate-pulse" />
+            <div key={menu.id}>
+              <button
+                onClick={() => setActiveMenu(menu.nombre)}
+                className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 mb-2 group ${
+                  activeMenu === menu.nombre
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg scale-[1.02]"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:scale-[1.01] hover:shadow-md"
+                }`}
+              >
+                <IconComponent className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <span className="font-medium">{menu.nombre}</span>
+                {activeMenu === menu.nombre && (
+                  <div className="ml-auto w-2 h-2 bg-secondary rounded-full animate-pulse" />
+                )}
+              </button>
+
+              {/* Added submenu for Propiedades */}
+              {menu.nombre === "Propiedades" && activeMenu === "Propiedades" && (
+                <div className="ml-8 mt-2 space-y-2">
+          
+
+                  {/* Added submenu for Proyectos under Propiedades */}
+                  <button
+                    onClick={() => setActiveMenu("Proyectos")}
+                    className="w-full flex items-center space-x-4 px-4 py-2 rounded-lg text-left transition-all duration-200 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:scale-[1.01] hover:shadow-md"
+                  >
+                    <Building2 className="w-4 h-4" />
+                    <span className="text-sm">Proyectos</span>
+                  </button>
+                </div>
               )}
-            </button>
+            </div>
           );
         })}
       </nav>

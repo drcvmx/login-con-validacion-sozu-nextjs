@@ -10,17 +10,27 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Eye, Edit } from "lucide-react";
-import type { PropiedadDisponible } from "@/types";
+import type { PropiedadCompleta } from "@/types";
 
 interface PropertyCardProps {
-  propiedad: PropiedadDisponible;
+  propiedad: {
+    propiedad_id: number;
+    numero_propiedad: string;
+    // ... otros campos básicos
+    recamaras: number;  // Asegúrate de incluir esto
+    banos_completos: number;
+    medio_banos: number;
+  };
   index?: number;
 }
 
 export function PropertyCard({ propiedad, index = 0 }: PropertyCardProps) {
+  console.log("Datos recibidos en PropertyCard:", propiedad); // ← Añade esto
+  console.log('Propiedad completa:', propiedad);
+  
   return (
     <Card
-      key={`${propiedad.modelo_id}-${propiedad.edificio_id}-${index}`}
+      key={`${propiedad.propiedad_id}-${propiedad.numero_propiedad}-${index}`}
       className="hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 shadow-lg"
     >
       <CardHeader className="pb-3">
@@ -42,22 +52,28 @@ export function PropertyCard({ propiedad, index = 0 }: PropertyCardProps) {
               🏢 {propiedad.edificio_nombre}
             </p>
             <p className="text-xs text-muted-foreground">
-              {propiedad.edificio_pisos.trim()} pisos
+              {propiedad.edificio_pisos?.trim() || "N/A"} pisos
             </p>
           </div>
 
           {/* Detalles de la propiedad */}
           <div className="grid grid-cols-3 gap-2 text-sm">
             <div className="text-center">
-              <p className="font-semibold text-primary">{propiedad.recamaras}</p>
+              <p className="font-semibold text-primary">
+                {propiedad.recamaras} {/* Usar directamente el valor ya procesado */}
+              </p>
               <p className="text-xs text-muted-foreground">Recámaras</p>
             </div>
             <div className="text-center">
-              <p className="font-semibold text-primary">{propiedad.banos_completos}</p>
+              <p className="font-semibold text-primary">
+                {propiedad.banos_completos ?? 0} {/* Fallback a 0 */}
+              </p>
               <p className="text-xs text-muted-foreground">Baños</p>
             </div>
             <div className="text-center">
-              <p className="font-semibold text-primary">{propiedad.medio_banos}</p>
+              <p className="font-semibold text-primary">
+                {propiedad.medio_banos ?? 0} {/* Fallback a 0 */}
+              </p>
               <p className="text-xs text-muted-foreground">½ Baños</p>
             </div>
           </div>
@@ -69,7 +85,7 @@ export function PropertyCard({ propiedad, index = 0 }: PropertyCardProps) {
                 Características:
               </p>
               <div className="flex flex-wrap gap-1">
-                {propiedad.caracteristicas.slice(0, 3).map((caracteristica, idx) => (
+                {propiedad.caracteristicas?.slice(0, 3).map((caracteristica, idx) => (
                   <Badge key={idx} variant="secondary" className="text-xs">
                     {caracteristica}
                   </Badge>

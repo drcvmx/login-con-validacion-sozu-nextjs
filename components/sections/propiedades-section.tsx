@@ -11,26 +11,59 @@ import {
 import { PropertyCard } from "@/components/ui/property-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatsCard } from "@/components/ui/stats-card";
+import { PropertyTable } from "@/components/ui/property-table";
 import {
   Building2,
   Plus,
   Home,
   Users,
   FileText,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import type { PropiedadBase, ModeloPropiedad, PropiedadCompleta } from "@/types";
 
 export default function PropiedadesSection() {
   const { usuario } = useAuth();
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // 10 items por página
 
   if (!usuario) return null;
 
-  const propiedades = usuario.propiedades_disponibles || [];
+  const propiedades = usuario.todas_las_propiedades || [];
+  
+  // Calcular propiedades paginadas
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProperties = propiedades.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(propiedades.length / itemsPerPage);
 
   // Estadísticas calculadas
   const edificiosUnicos = [...new Set(propiedades.map(p => p.edificio_nombre))];
   const proyectosUnicos = [...new Set(propiedades.map(p => p.proyecto_nombre))];
   const tiposUnicos = [...new Set(propiedades.map(p => p.modelo_nombre))];
+
+  const propiedadesEnriquecidas = usuario.todas_las_propiedades?.map(propiedad => {
+    // Buscar el modelo correspondiente
+    const modelo = usuario.propiedades_disponibles?.find(m => 
+      m.modelo_id === propiedad.modelo_id && 
+      m.proyecto_id === propiedad.proyecto_id
+    );
+
+    return {
+      ...propiedad,
+      recamaras: modelo?.recamaras ?? 0,       // Heredar del modelo
+      banos_completos: modelo?.banos_completos ?? 0,
+      medio_banos: modelo?.medio_banos ?? 0,
+    };
+  }) || [];
+
+  console.log('Propiedades enriquecidas:', propiedadesEnriquecidas);
+  console.log('Primera propiedad:', propiedadesEnriquecidas[0]);
 
   return (
     <div className="space-y-8 animate-slide-in">
@@ -52,14 +85,14 @@ export default function PropiedadesSection() {
       {/* Estadísticas de Propiedades */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <StatsCard
-          title="Total Propiedades"
-          value={propiedades.length}
-          subtitle="Propiedades disponibles"
-          icon={Building2}
-          iconColor="bg-purple-500/10 text-purple-500"
-          gradientFrom="from-purple-500/5"
-          gradientTo="to-violet-500/5"
-          valueColor="text-purple-500"
+          title="Proyectos"
+          value={proyectosUnicos.length}
+          subtitle="Proyectos con acceso"
+          icon={Users}
+          iconColor="bg-green-500/10 text-green-500"
+          gradientFrom="from-green-500/5"
+          gradientTo="to-emerald-500/5"
+          valueColor="text-green-500"
         />
 
         <StatsCard
@@ -72,20 +105,9 @@ export default function PropiedadesSection() {
           gradientTo="to-cyan-500/5"
           valueColor="text-blue-500"
         />
-
-        <StatsCard
-          title="Proyectos"
-          value={proyectosUnicos.length}
-          subtitle="Proyectos con acceso"
-          icon={Users}
-          iconColor="bg-green-500/10 text-green-500"
-          gradientFrom="from-green-500/5"
-          gradientTo="to-emerald-500/5"
-          valueColor="text-green-500"
-        />
-
-        <StatsCard
-          title="Tipos de Modelo"
+        
+          <StatsCard
+          title="Modelos"
           value={tiposUnicos.length}
           subtitle="Modelos diferentes"
           icon={FileText}
@@ -93,6 +115,17 @@ export default function PropiedadesSection() {
           gradientFrom="from-orange-500/5"
           gradientTo="to-red-500/5"
           valueColor="text-orange-500"
+        />
+
+        <StatsCard
+          title="Propiedades"
+          value={propiedades.length}
+          subtitle="Propiedades disponibles"
+          icon={Building2}
+          iconColor="bg-purple-500/10 text-purple-500"
+          gradientFrom="from-purple-500/5"
+          gradientTo="to-violet-500/5"
+          valueColor="text-purple-500"
         />
       </div>
 
@@ -107,16 +140,8 @@ export default function PropiedadesSection() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {propiedades.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {propiedades.map((propiedad, index) => (
-                <PropertyCard 
-                  key={`${propiedad.modelo_id}-${propiedad.edificio_id}-${index}`} 
-                  propiedad={propiedad} 
-                  index={index} 
-                />
-              ))}
-            </div>
+          {currentProperties.length > 0 ? (
+            <PropertyTable propiedades={propiedadesEnriquecidas} />
           ) : (
             <EmptyState
               icon={Building2}
@@ -128,6 +153,7 @@ export default function PropiedadesSection() {
           )}
         </CardContent>
       </Card>
+   
 
       {/* Análisis por Proyecto */}
       {propiedades.length > 0 && (

@@ -3,7 +3,6 @@
 import DashboardSection from "./dashboard-section";
 import UsuariosSection from "./usuarios-section";
 import EntidadesSection from "./entidades-section";
-import ProyectosSection from "./proyectos-section";
 import PropiedadesSection from "./propiedades-section";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +39,7 @@ export default function SectionRouter({ activeMenu, setActiveMenu }: SectionRout
       return <PropiedadesSection />;
     }
     // Si es "Proyectos" genérico, mostrar la sección de proyectos
-    return <ProyectosSection />;
+    return <DashboardSection setActiveMenu={setActiveMenu} />;
   }
 
   // Secciones genéricas para otros menús

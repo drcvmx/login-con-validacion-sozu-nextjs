@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,45 +17,100 @@ import {
   Trash2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
+import { UsuarioForm } from "@/components/forms/usuario-form";
+import { useCrudOperations } from "@/hooks/use-crud-operations";
 
 export default function UsuariosSection() {
-  const { usuario } = useAuth();
+  const { usuario, hasPermission } = useAuth();
+  const { deleteUsuario, loading } = useCrudOperations();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [usuarios, setUsuarios] = useState<any[]>([]); // <-- Nuevo estado para usuarios
+  const [loadingUsuarios, setLoadingUsuarios] = useState(true); // <-- Estado de carga
+
+  useEffect(() => {
+    const cargarUsuarios = async () => {
+      try {
+        const response = await fetch("https://n8n.sozu.com/webhook/loginconvalidacion", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: usuario?.email }), // Usamos el email del usuario logueado
+        });
+
+        if (!response.ok) throw new Error("Error al cargar usuarios");
+        
+        const data = await response.json();
+        // Adaptación para extraer usuarios de la respuesta
+        const usuariosData = data.usuarios || data.resultado_json?.usuarios || [];
+        setUsuarios(usuariosData);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setLoadingUsuarios(false);
+      }
+    };
+
+    if (usuario?.email) {
+      cargarUsuarios();
+    }
+  }, [usuario]);
 
   if (!usuario) return null;
 
+  const handleEdit = (user: any) => {
+    setSelectedUser(user);
+    setShowEditForm(true);
+  };
+
+  const handleDelete = async (email: string) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+      try {
+        await deleteUsuario(email);
+        // Aquí podrías actualizar la lista de usuarios o mostrar un mensaje de éxito
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    }
+  };
+
+  const canAdd = hasPermission('Agregar');
+  const canEdit = hasPermission('Actualizar');
+  const canDelete = hasPermission('Eliminar');
+
   // Datos de ejemplo para usuarios
-  const usuarios = [
-    {
-      name: usuario.nombre,
-      email: usuario.email,
-      role: usuario.rol.nombre,
-      status: "Activo",
-    },
-    {
-      name: "María López",
-      email: "gerente@sozu.com",
-      role: "Gerente",
-      status: "Activo",
-    },
-    {
-      name: "Juan Torres",
-      email: "usuario1@sozu.com",
-      role: "Usuario",
-      status: "Activo",
-    },
-    {
-      name: "Ana García",
-      email: "ana.garcia@sozu.com",
-      role: "Vendedor",
-      status: "Activo",
-    },
-    {
-      name: "Carlos Mendez",
-      email: "carlos.mendez@sozu.com",
-      role: "Usuario",
-      status: "Inactivo",
-    },
-  ];
+  // const usuarios = [
+  //   {
+  //     name: usuario.nombre,
+  //     email: usuario.email,
+  //     role: usuario.rol.nombre,
+  //     status: "Activo",
+  //   },
+  //   {
+  //     name: "María López",
+  //     email: "gerente@sozu.com",
+  //     role: "Gerente",
+  //     status: "Activo",
+  //   },
+  //   {
+  //     name: "Juan Torres",
+  //     email: "usuario1@sozu.com",
+  //     role: "Usuario",
+  //     status: "Activo",
+  //   },
+  //   {
+  //     name: "Ana García",
+  //     email: "ana.garcia@sozu.com",
+  //     role: "Vendedor",
+  //     status: "Activo",
+  //   },
+  //   {
+  //     name: "Carlos Mendez",
+  //     email: "carlos.mendez@sozu.com",
+  //     role: "Usuario",
+  //     status: "Inactivo",
+  //   },
+  // ];
 
   return (
     <div className="space-y-8 animate-slide-in">
@@ -67,10 +123,15 @@ export default function UsuariosSection() {
             Administra los usuarios del sistema
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200 text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          Nuevo Usuario
-        </Button>
+        {canAdd && (
+          <Button 
+            onClick={() => setShowCreateForm(true)}
+            className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200 text-primary-foreground"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo Usuario
+          </Button>
+        )}
       </div>
 
       <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
@@ -84,63 +145,76 @@ export default function UsuariosSection() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {usuarios.map((user, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-6 border border-border rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-[1.01] bg-card/80 backdrop-blur-sm animate-slide-in"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="flex items-center space-x-6">
-                  <Avatar className="w-14 h-14 ring-2 ring-primary/20">
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground font-bold text-lg">
-                      {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h3 className="font-bold text-lg text-foreground">
-                      {user.name}
-                    </h3>
-                    <p className="text-muted-foreground">{user.email}</p>
+            {loadingUsuarios ? (
+              <p className="text-center py-8">Cargando usuarios...</p>
+            ) : usuarios.length === 0 ? (
+              <p className="text-center py-8">No hay usuarios registrados.</p>
+            ) : (
+              usuarios.map((user, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-6 border border-border rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-[1.01] bg-card/80 backdrop-blur-sm animate-slide-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="flex items-center space-x-6">
+                    <Avatar className="w-14 h-14 ring-2 ring-primary/20">
+                      <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground font-bold text-lg">
+                        {user.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <h3 className="font-bold text-lg text-foreground">
+                        {user.name}
+                      </h3>
+                      <p className="text-muted-foreground">{user.email}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Badge
+                      variant="outline"
+                      className="border-primary/20 text-primary"
+                    >
+                      {user.role}
+                    </Badge>
+                    <Badge
+                      className={
+                        user.status === "Activo"
+                          ? "bg-green-500 hover:bg-green-600"
+                          : "bg-gray-500 hover:bg-gray-600"
+                      }
+                    >
+                      {user.status}
+                    </Badge>
+                    <div className="flex space-x-2">
+                      {canEdit && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEdit(user)}
+                          className="hover:bg-primary/10 hover:text-primary"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      )}
+                      {canDelete && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDelete(user.email)}
+                          disabled={loading}
+                          className="hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <Badge
-                    variant="outline"
-                    className="border-primary/20 text-primary"
-                  >
-                    {user.role}
-                  </Badge>
-                  <Badge
-                    className={
-                      user.status === "Activo"
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-gray-500 hover:bg-gray-600"
-                    }
-                  >
-                    {user.status}
-                  </Badge>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-primary/10 hover:text-primary"
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="hover:bg-destructive/10 hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </CardContent>
       </Card>
@@ -207,6 +281,32 @@ export default function UsuariosSection() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modales CRUD */}
+      <UsuarioForm
+        isOpen={showCreateForm}
+        onClose={() => setShowCreateForm(false)}
+        mode="create"
+        onSuccess={() => {
+          setShowCreateForm(false);
+          // Aquí podrías refrescar la lista de usuarios
+        }}
+      />
+
+      <UsuarioForm
+        isOpen={showEditForm}
+        onClose={() => {
+          setShowEditForm(false);
+          setSelectedUser(null);
+        }}
+        mode="edit"
+        initialData={selectedUser}
+        onSuccess={() => {
+          setShowEditForm(false);
+          setSelectedUser(null);
+          // Aquí podrías refrescar la lista de usuarios
+        }}
+      />
     </div>
   );
 }

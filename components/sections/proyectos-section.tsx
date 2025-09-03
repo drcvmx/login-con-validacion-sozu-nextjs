@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,11 +16,42 @@ import {
   Plus,
   Eye,
   Edit,
+  Trash2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
+import { ProyectoForm } from "@/components/forms/proyecto-form";
+import { useCrudOperations } from "@/hooks/use-crud-operations";
 
 export default function ProyectosSection() {
-  const { proyectos } = useAuth();
+  const { proyectos, hasPermission } = useAuth();
+  const { deleteProyecto, loading } = useCrudOperations();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const handleView = (project: any) => {
+    setSelectedProject(project);
+    setShowViewModal(true);
+  };
+
+  const handleEdit = (project: any) => {
+    setSelectedProject(project);
+    setShowEditForm(true);
+  };
+
+  const handleDelete = async (id: number) => {
+    if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
+      try {
+        await deleteProyecto(id);
+      } catch (error) {
+        console.error('Error deleting project:', error);
+      }
+    }
+  };
+
+  const canAdd = hasPermission('Agregar');
+  const canEdit = hasPermission('Actualizar');
+  const canDelete = hasPermission('Eliminar');
 
   return (
     <div className="space-y-8 animate-slide-in">
@@ -31,10 +64,15 @@ export default function ProyectosSection() {
             Administra los proyectos inmobiliarios
           </p>
         </div>
-        <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200 text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          Nuevo Proyecto
-        </Button>
+        {canAdd && (
+          <Button 
+            onClick={() => setShowCreateForm(true)}
+            className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200 text-primary-foreground"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Nuevo Proyecto
+          </Button>
+        )}
       </div>
 
       {/* Estadísticas de Proyectos */}
@@ -188,19 +226,35 @@ export default function ProyectosSection() {
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => handleView(project)}
                       className="flex-1 bg-transparent hover:bg-primary/10 hover:text-primary"
                     >
                       <Eye className="w-4 h-4 mr-2" />
                       Ver
                     </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 bg-transparent hover:bg-secondary/10 hover:text-secondary"
-                    >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Editar
-                    </Button>
+                    {canEdit && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(project)}
+                        className="flex-1 bg-transparent hover:bg-secondary/10 hover:text-secondary"
+                      >
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
+                      </Button>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(project.proyecto_id)}
+                        disabled={loading}
+                        className="flex-1 bg-transparent hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Eliminar
+                      </Button>
+                    )}
                   </div>
                 </div>
               </CardContent>
@@ -288,6 +342,80 @@ export default function ProyectosSection() {
           </CardContent>
         </Card>
       )}
+
+      {/* Modales CRUD */}
+      <ProyectoForm
+        isOpen={showCreateForm}
+        onClose={() => setShowCreateForm(false)}
+        mode="create"
+        onSuccess={() => {
+          setShowCreateForm(false);
+        }}
+      />
+
+      <ProyectoForm
+        isOpen={showEditForm}
+        onClose={() => {
+          setShowEditForm(false);
+          setSelectedProject(null);
+        }}
+        mode="edit"
+        initialData={selectedProject}
+        onSuccess={() => {
+          setShowEditForm(false);
+          setSelectedProject(null);
+        }}
+      />
+
+      {/* Modal de solo lectura para Ver Proyecto */}
+      <Dialog open={showViewModal} onOpenChange={setShowViewModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Detalles del Proyecto</DialogTitle>
+            <DialogDescription>Consulta la información del proyecto.</DialogDescription>
+          </DialogHeader>
+          {selectedProject && (
+            <div className="space-y-3">
+              <div>
+                <span className="font-semibold">Nombre: </span>
+                <span>{selectedProject.nombre}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Dirección: </span>
+                <span>{selectedProject.direccion}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Tipo de uso: </span>
+                <span>{selectedProject.tipo_uso}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Edificios: </span>
+                <span>{selectedProject.edificios_count}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Amenidades: </span>
+                <span>{selectedProject.amenidades_count}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Precio m²: </span>
+                <span>${selectedProject.precio_m2_actual?.toLocaleString()} MXN</span>
+              </div>
+              <div>
+                <span className="font-semibold">Inicio construcción: </span>
+                <span>{new Date(selectedProject.fecha_inicio_construccion).toLocaleDateString("es-MX")}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Descripción: </span>
+                <span>{selectedProject.descripcion}</span>
+              </div>
+              <div>
+                <span className="font-semibold">Estado: </span>
+                <span>{selectedProject.activo ? "Activo" : "Inactivo"}</span>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
