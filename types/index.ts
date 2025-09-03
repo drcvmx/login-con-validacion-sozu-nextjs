@@ -65,6 +65,7 @@ export interface Usuario {
   }
   proyectos_acceso?: Proyecto[]
   propiedades_disponibles?: PropiedadDisponible[]
+  todas_las_propiedades?: PropiedadBase[] | PropiedadCompleta[]; // Elegir según necesidad
 }
 
 // Tipos para formularios CRUD
@@ -135,6 +136,10 @@ export interface ApiResponse<T = any> {
   data?: T
   error?: string
   message?: string
+  pagination?: { // Para respuestas paginadas
+    total: number;
+    page: number;
+  };
 }
 
 export interface CrudOperation {

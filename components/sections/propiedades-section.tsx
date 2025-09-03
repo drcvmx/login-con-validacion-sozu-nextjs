@@ -20,17 +20,106 @@ import {
   FileText,
   ChevronLeft,
   ChevronRight,
+  FileSpreadsheet,
+  UploadCloud,
+  X,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { PropiedadBase, ModeloPropiedad, PropiedadCompleta } from "@/types";
+import * as Dialog from '@radix-ui/react-dialog';
+import * as Progress from '@radix-ui/react-progress';
+import { toast } from 'sonner';
 
 export default function PropiedadesSection() {
   const { usuario } = useAuth();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10); // 10 items por página
+
+  // Estados para la carga masiva
+  const [openCarga, setOpenCarga] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const N8N_ENDPOINT = 'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/cargar-archivo-propiedades';
+
+  // Funciones para manejar archivos
+  const onFileSelect = (f?: File) => {
+    if (!f) return;
+    const isValid = /\.(csv|xlsx?)$/i.test(f.name);
+    if (!isValid) {
+      toast.error('Formato no permitido. Usa .csv, .xls o .xlsx');
+      return;
+    }
+    setFile(f);
+  };
+
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragActive(true);
+  };
+
+  const onDragLeave = () => setDragActive(false);
+
+  const onDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragActive(false);
+    const f = e.dataTransfer.files?.[0];
+    if (f) onFileSelect(f);
+  };
+
+  const resetState = () => {
+    setFile(null);
+    setProgress(0);
+    setUploading(false);
+  };
+
+  const subirArchivo = async () => {
+    if (!file) {
+      toast.error('Selecciona un archivo primero');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      setProgress(30);
+
+      const form = new FormData();
+      form.append('archivo', file);  // Campo del archivo
+      form.append('usuario', usuario?.email || 'desconocido@sozu.com');
+      form.append('actividad', '7');  // Nuevo campo requerido
+      form.append('nombre_usuario', usuario?.nombre || 'Usuario');  // Nuevo campo requerido
+
+      const res = await fetch(N8N_ENDPOINT, {
+        method: 'POST',
+        body: form,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || `Error ${res.status}`);
+      }
+
+      setProgress(100);
+      toast.success('Archivo procesado exitosamente');
+      setTimeout(() => setOpenCarga(false), 1500);
+      
+    } catch (err) {
+      console.error('Error completo:', err);
+      toast.error('Error al subir', {
+        description: err instanceof Error ? err.message : 'Revisa la consola'
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   if (!usuario) return null;
 
@@ -67,19 +156,88 @@ export default function PropiedadesSection() {
 
   return (
     <div className="space-y-8 animate-slide-in">
+      {/* Botón de Carga Masiva */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">
-            Gestión de Propiedades
-          </h2>
-          <p className="text-muted-foreground mt-1">
-            Administra las propiedades disponibles
-          </p>
+          <h2 className="text-2xl font-bold text-foreground">Gestión de Propiedades</h2>
+          <p className="text-muted-foreground mt-1">Administra las propiedades disponibles</p>
         </div>
-        <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg transition-all duration-200 text-primary-foreground">
-          <Plus className="w-4 h-4 mr-2" />
-          Nueva Propiedad
-        </Button>
+        <div className="flex gap-4">
+          <Dialog.Root open={openCarga} onOpenChange={setOpenCarga}>
+            <Dialog.Trigger asChild>
+              <Button className="bg-gradient-to-r from-primary to-secondary">
+                <FileSpreadsheet className="w-4 h-4 mr-2" />
+                Carga Masiva
+              </Button>
+            </Dialog.Trigger>
+            <Dialog.Content className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
+              <div className="bg-card p-6 rounded-lg max-w-md w-full z-[10000]">
+                <Dialog.Title className="text-xl font-bold flex items-center gap-2">
+                  <FileSpreadsheet className="w-5 h-5" />
+                  Subir Archivo
+                </Dialog.Title>
+                <div
+                  onDragOver={onDragOver}
+                  onDragLeave={onDragLeave}
+                  onDrop={onDrop}
+                  className={`border-2 border-dashed rounded-lg p-8 text-center mt-4 ${
+                    dragActive ? 'border-primary bg-primary/10' : 'border-muted'
+                  }`}
+                >
+                  <UploadCloud className="mx-auto h-10 w-10 text-muted-foreground" />
+                  <p className="mt-2">Arrastra tu archivo aquí o</p>
+                  <input
+                    type="file"
+                    accept=".csv,.xls,.xlsx"
+                    onChange={(e) => onFileSelect(e.target.files?.[0])}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <label
+                    htmlFor="file-upload"
+                    className="inline-block mt-2 px-4 py-2 bg-muted rounded-md cursor-pointer"
+                  >
+                    Seleccionar Archivo
+                  </label>
+                </div>
+                {file && (
+                  <div className="mt-4">
+                    <p className="text-sm">
+                      Archivo seleccionado: <span className="font-medium">{file.name}</span>
+                    </p>
+                  </div>
+                )}
+                {uploading && (
+                  <div className="mt-4">
+                    <Progress.Root className="h-2 bg-muted rounded-full overflow-hidden">
+                      <Progress.Indicator
+                        className="h-full bg-primary transition-all"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </Progress.Root>
+                    <p className="text-xs mt-1 text-muted-foreground">Subiendo... {progress}%</p>
+                  </div>
+                )}
+                <div className="mt-6 flex justify-end gap-2">
+                  <Dialog.Close className="px-4 py-2 text-sm rounded-md border">
+                    Cancelar
+                  </Dialog.Close>
+                  <Button
+                    onClick={subirArchivo}
+                    disabled={!file || uploading}
+                    className="px-4 py-2 text-sm"
+                  >
+                    {uploading ? 'Subiendo...' : 'Subir'}
+                  </Button>
+                </div>
+              </div>
+            </Dialog.Content>
+          </Dialog.Root>
+          <Button className="bg-gradient-to-r from-primary to-secondary">
+            <Plus className="w-4 h-4 mr-2" />
+            Nueva Propiedad
+          </Button>
+        </div>
       </div>
 
       {/* Estadísticas de Propiedades */}

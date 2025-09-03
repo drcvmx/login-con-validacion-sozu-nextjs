@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import { AuthProvider } from "@/contexts/auth-context"
 import "./globals.css"
+import { Toaster } from "sonner";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -39,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <Suspense fallback={null}>{children}</Suspense>
         </AuthProvider>
+        <Toaster richColors position="top-right" />
         <Analytics />
       </body>
     </html>

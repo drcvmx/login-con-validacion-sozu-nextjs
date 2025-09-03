@@ -9,7 +9,7 @@ interface UsuarioFormProps {
   onClose: () => void
   mode: "create" | "edit" | "view"
   initialData?: any
-  onSuccess?: () => void
+  onSuccess?: (newUser: CreateUsuarioForm) => void // Changed to CreateUsuarioForm
 }
 
 export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: UsuarioFormProps) {
@@ -41,7 +41,7 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
 
       // Refresh auth context to get updated data
       refreshAuth()
-      onSuccess?.()
+      onSuccess?.(mode === "create" ? { email: formData.email, nombre: formData.nombre } : initialData) // Pass the new user data
     } catch (error) {
       // Error is handled by the hook
       console.error("Error saving usuario:", error)

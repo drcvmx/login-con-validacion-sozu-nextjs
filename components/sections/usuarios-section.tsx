@@ -15,62 +15,48 @@ import {
   Plus,
   Edit,
   Trash2,
+  Loader2,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { UsuarioForm } from "@/components/forms/usuario-form";
 import { useCrudOperations } from "@/hooks/use-crud-operations";
+import type { Usuario } from "@/types";
+import { toast } from "sonner";
 
 export default function UsuariosSection() {
-  const { usuario, hasPermission } = useAuth();
+  const { todosLosUsuarios, hasPermission, refreshAuth } = useAuth();
   const { deleteUsuario, loading } = useCrudOperations();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [usuarios, setUsuarios] = useState<any[]>([]); // <-- Nuevo estado para usuarios
-  const [loadingUsuarios, setLoadingUsuarios] = useState(true); // <-- Estado de carga
+  const [selectedUser, setSelectedUser] = useState<Usuario | null>(null);
+  const [loadingUsuarios, setLoadingUsuarios] = useState(true);
 
   useEffect(() => {
-    const cargarUsuarios = async () => {
-      try {
-        const response = await fetch("https://n8n.sozu.com/webhook/loginconvalidacion", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: usuario?.email }), // Usamos el email del usuario logueado
-        });
-
-        if (!response.ok) throw new Error("Error al cargar usuarios");
-        
-        const data = await response.json();
-        // Adaptación para extraer usuarios de la respuesta
-        const usuariosData = data.usuarios || data.resultado_json?.usuarios || [];
-        setUsuarios(usuariosData);
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setLoadingUsuarios(false);
-      }
-    };
-
-    if (usuario?.email) {
-      cargarUsuarios();
+    if (todosLosUsuarios) {
+      setLoadingUsuarios(false);
     }
-  }, [usuario]);
+  }, [todosLosUsuarios]);
 
-  if (!usuario) return null;
+  if (!todosLosUsuarios) return null;
 
-  const handleEdit = (user: any) => {
+  const handleEdit = (user: Usuario) => {
+    if (!user) return; // Validación adicional
     setSelectedUser(user);
     setShowEditForm(true);
   };
 
   const handleDelete = async (email: string) => {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      try {
-        await deleteUsuario(email);
-        // Aquí podrías actualizar la lista de usuarios o mostrar un mensaje de éxito
-      } catch (error) {
-        console.error('Error deleting user:', error);
-      }
+    if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
+    
+    try {
+      await deleteUsuario(email);
+      // Opcional: Mostrar toast de éxito
+      toast.success('Usuario eliminado');
+      // Recargar datos (si usas react-query, SWR, o refreshAuth)
+      refreshAuth(); 
+    } catch (error) {
+      toast.error('Error al eliminar');
+      console.error(error);
     }
   };
 
@@ -147,10 +133,10 @@ export default function UsuariosSection() {
           <div className="space-y-4">
             {loadingUsuarios ? (
               <p className="text-center py-8">Cargando usuarios...</p>
-            ) : usuarios.length === 0 ? (
+            ) : todosLosUsuarios?.length === 0 ? ( // Usa todosLosUsuarios directamente
               <p className="text-center py-8">No hay usuarios registrados.</p>
             ) : (
-              usuarios.map((user, index) => (
+              todosLosUsuarios?.map((user: Usuario, index) => ( // Usa todosLosUsuarios aquí
                 <div
                   key={index}
                   className="flex items-center justify-between p-6 border border-border rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-[1.01] bg-card/80 backdrop-blur-sm animate-slide-in"
@@ -159,15 +145,14 @@ export default function UsuariosSection() {
                   <div className="flex items-center space-x-6">
                     <Avatar className="w-14 h-14 ring-2 ring-primary/20">
                       <AvatarFallback className="bg-gradient-to-br from-primary to-secondary text-primary-foreground font-bold text-lg">
-                        {user.name
-                          .split(" ")
-                          .map((n) => n[0])
+                        {user.nombre?.split(" ")
+                          .map((n: string) => n[0])
                           .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className="font-bold text-lg text-foreground">
-                        {user.name}
+                        {user.nombre}
                       </h3>
                       <p className="text-muted-foreground">{user.email}</p>
                     </div>
@@ -177,37 +162,48 @@ export default function UsuariosSection() {
                       variant="outline"
                       className="border-primary/20 text-primary"
                     >
-                      {user.role}
+                      {typeof user.rol === 'string' ? user.rol : user.rol?.nombre}
                     </Badge>
                     <Badge
                       className={
-                        user.status === "Activo"
+                        user.activo
                           ? "bg-green-500 hover:bg-green-600"
                           : "bg-gray-500 hover:bg-gray-600"
                       }
                     >
-                      {user.status}
+                      {user.activo ? "Activo" : "Inactivo"}
                     </Badge>
                     <div className="flex space-x-2">
                       {canEdit && (
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => handleEdit(user)}
-                          className="hover:bg-primary/10 hover:text-primary"
+                          disabled={!user} // Deshabilitar si no hay usuario
+                          className="flex-1 bg-transparent hover:bg-secondary/10 hover:text-secondary"
+                          title="Editar usuario"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-4 h-4 mr-2" />
+                          Editar
                         </Button>
                       )}
                       {canDelete && (
                         <Button
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
                           onClick={() => handleDelete(user.email)}
                           disabled={loading}
-                          className="hover:bg-destructive/10 hover:text-destructive"
+                          className="flex-1 bg-transparent hover:bg-destructive/10 hover:text-destructive"
+                          title="Eliminar usuario"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          {loading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <>
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Eliminar
+                            </>
+                          )}
                         </Button>
                       )}
                     </div>
@@ -233,7 +229,7 @@ export default function UsuariosSection() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-blue-500 mb-1">
-              {usuarios.length}
+              {todosLosUsuarios?.length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               <span>Usuarios registrados</span>
@@ -253,7 +249,7 @@ export default function UsuariosSection() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-500 mb-1">
-              {usuarios.filter(u => u.status === "Activo").length}
+              {todosLosUsuarios?.filter(u => u.activo).length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               <span>Usuarios activos</span>
@@ -273,7 +269,8 @@ export default function UsuariosSection() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-purple-500 mb-1">
-              {[...new Set(usuarios.map(u => u.role))].length}
+              {[...new Set(todosLosUsuarios?.map(u => 
+                typeof u.rol === 'string' ? u.rol : u.rol?.nombre))].length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               <span>Roles diferentes</span>
