@@ -21,6 +21,8 @@ import {
 import { useAuth } from "@/contexts/auth-context";
 import { ProyectoForm } from "@/components/forms/proyecto-form";
 import { useCrudOperations } from "@/hooks/use-crud-operations";
+import { useConfirmDialog } from "@/components/ui/confirm-dialog"
+import { toast } from "sonner"
 
 export default function ProyectosSection() {
   const { proyectos, hasPermission, refreshAuth } = useAuth();
@@ -39,16 +41,26 @@ export default function ProyectosSection() {
     setShowEditForm(true);
   };
 
-  const handleDelete = async (id: number) => {
-    if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
-      try {
-        await deleteProyecto(id);
-        refreshAuth(); // Agregar esta línea
-      } catch (error) {
-        console.error('Error deleting project:', error);
-      }
-    }
-  };
+  const { showConfirm, ConfirmDialog } = useConfirmDialog()
+  const handleDelete = async (id: number, nombre: string) => {
+    showConfirm({
+      title: "Eliminar Proyecto",
+      description: `¿Estás seguro de que deseas eliminar el proyecto "${nombre}"? Esta acción no se puede deshacer.`,
+      confirmText: "Eliminar",
+      cancelText: "Cancelar",
+      variant: "destructive",
+      onConfirm: async () => {
+        try {
+          await deleteProyecto(id)
+          toast.success("Proyecto eliminado exitosamente")
+          await refreshAuth() // Agregar re-fetch después de eliminación exitosa
+        } catch (error) {
+          console.error('Error al eliminar proyecto:', error)
+          toast.error("Error al eliminar el proyecto")
+        }
+      },
+    })
+  }
 
   const canAdd = hasPermission('Agregar');
   const canEdit = hasPermission('Actualizar');
@@ -225,7 +237,7 @@ export default function ProyectosSection() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleDelete(project.proyecto_id)}
+                        onClick={() => handleDelete(project.proyecto_id, project.nombre)}
                         disabled={loading}
                         className="flex-1 bg-transparent hover:bg-destructive/10 hover:text-destructive"
                       >
@@ -391,6 +403,7 @@ export default function ProyectosSection() {
           )}
         </DialogContent>
       </Dialog>
+      <ConfirmDialog />
     </div>
   );
 }

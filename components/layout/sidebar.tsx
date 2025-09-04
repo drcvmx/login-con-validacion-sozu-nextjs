@@ -25,9 +25,17 @@ interface SidebarProps {
   sidebarOpen: boolean;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
+  expandedSubmenus: Record<string, boolean>;
+  toggleSubmenu: (menuName: string) => void;
 }
 
-export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps) {
+export function Sidebar({ 
+  sidebarOpen, 
+  activeMenu, 
+  setActiveMenu, 
+  expandedSubmenus, 
+  toggleSubmenu 
+}: SidebarProps) {
   const { usuario, logout } = useAuth();
 
   if (!usuario) return null;
@@ -50,11 +58,9 @@ export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps
   };
 
   return (
-    <div
-      className={`fixed inset-y-0 left-0 z-50 w-72 bg-sidebar/95 backdrop-blur-xl border-r border-sidebar-border shadow-2xl transform transition-all duration-300 ease-in-out ${
+    <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-sidebar/95 backdrop-blur-xl border-r border-sidebar-border shadow-2xl transform transition-all duration-300 ease-in-out ${
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
-    >
+      }`}>
       {/* Logo Section */}
       <div className="flex items-center justify-between p-6 border-b border-sidebar-border bg-gradient-to-r from-primary/5 to-secondary/5">
         <div className="flex items-center space-x-3">
@@ -94,11 +100,18 @@ export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps
         {usuario.rol.menus.map((menu) => {
           if (!menu.activo) return null;
           const IconComponent = getMenuIcon(menu.nombre);
+          const hasSubmenus = menu.nombre === "Propiedades"; // Expandir según necesidad
+          const isExpanded = expandedSubmenus[menu.nombre];
 
           return (
             <div key={menu.id}>
               <button
-                onClick={() => setActiveMenu(menu.nombre)}
+                onClick={() => {
+                  setActiveMenu(menu.nombre);
+                  if (hasSubmenus) {
+                    toggleSubmenu(menu.nombre);
+                  }
+                }}
                 className={`w-full flex items-center space-x-4 px-4 py-4 rounded-xl text-left transition-all duration-200 mb-2 group ${
                   activeMenu === menu.nombre
                     ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-lg scale-[1.02]"
@@ -112,12 +125,9 @@ export function Sidebar({ sidebarOpen, activeMenu, setActiveMenu }: SidebarProps
                 )}
               </button>
 
-              {/* Added submenu for Propiedades */}
-              {menu.nombre === "Propiedades" && activeMenu === "Propiedades" && (
+              {/* 🔄 Submenús persistentes */}
+              {hasSubmenus && (activeMenu === menu.nombre || isExpanded) && (
                 <div className="ml-8 mt-2 space-y-2">
-          
-
-                  {/* Added submenu for Proyectos under Propiedades */}
                   <button
                     onClick={() => setActiveMenu("Proyectos")}
                     className="w-full flex items-center space-x-4 px-4 py-2 rounded-lg text-left transition-all duration-200 text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:scale-[1.01] hover:shadow-md"

@@ -22,10 +22,14 @@ interface CrudModalProps<T = any> {
 export function CrudModal<T>({ isOpen, initialData, ...props }: CrudModalProps<T>) {
   const [formData, setFormData] = useState<Partial<T>>({});
 
-  // 3. Efecto para sincronizar initialData
+  // 🔧 CORRECCIÓN: Mejor sincronización de initialData
   useEffect(() => {
     if (isOpen) {
-      setFormData(initialData || {});
+      // Asegurar que formData tenga todos los valores de initialData
+      setFormData(initialData ? { ...initialData } : {});
+    } else {
+      // Limpiar formData al cerrar
+      setFormData({});
     }
   }, [isOpen, initialData]);
 
@@ -34,9 +38,9 @@ export function CrudModal<T>({ isOpen, initialData, ...props }: CrudModalProps<T
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  // 5. Resetear al valor inicial al cerrar
+  // 🔧 CORRECCIÓN: Mejor manejo del cierre
   const handleClose = () => {
-    setFormData(initialData || {});
+    setFormData({});
     props.onClose();
   };
 

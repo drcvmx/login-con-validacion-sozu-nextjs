@@ -40,18 +40,42 @@ import { toast } from 'sonner';
 function extraerPropiedades(
   propiedadesDisponibles: Usuario['propiedades_disponibles']
 ): PropiedadBase[] {
-  return propiedadesDisponibles.flatMap(proyecto => 
-    proyecto.edificios.flatMap(edificio => 
-      edificio.modelos.flatMap(modelo => 
-        modelo.propiedades?.map(propiedad => ({
+  // Validar que propiedadesDisponibles no sea null/undefined
+  if (!propiedadesDisponibles || !Array.isArray(propiedadesDisponibles)) {
+    console.warn('propiedadesDisponibles es null, undefined o no es un array:', propiedadesDisponibles);
+    return [];
+  }
+
+  return propiedadesDisponibles.flatMap(proyecto => {
+    // Validar que el proyecto exista y tenga edificios
+    if (!proyecto || !proyecto.edificios || !Array.isArray(proyecto.edificios)) {
+      console.warn('Proyecto sin edificios válidos:', proyecto);
+      return [];
+    }
+    
+    return proyecto.edificios.flatMap(edificio => {
+      // Validar que el edificio exista y tenga modelos
+      if (!edificio || !edificio.modelos || !Array.isArray(edificio.modelos)) {
+        console.warn('Edificio sin modelos válidos:', edificio);
+        return [];
+      }
+      
+      return edificio.modelos.flatMap(modelo => {
+        // Validar que el modelo exista y tenga propiedades
+        if (!modelo || !modelo.propiedades || !Array.isArray(modelo.propiedades)) {
+          console.warn('Modelo sin propiedades válidas:', modelo);
+          return [];
+        }
+        
+        return modelo.propiedades.map(propiedad => ({
           ...propiedad,
-          proyecto_nombre: proyecto.proyecto_nombre,
-          edificio_nombre: edificio.edificio_nombre,
-          modelo_nombre: modelo.modelo_nombre,
-        })) ?? []
-      )
-    )
-  );
+          proyecto_nombre: proyecto.proyecto_nombre || 'Sin Proyecto',
+          edificio_nombre: edificio.edificio_nombre || 'Sin Edificio',
+          modelo_nombre: modelo.modelo_nombre || 'Sin Modelo',
+        }));
+      });
+    });
+  });
 }
 
 export default function PropiedadesSection() {
@@ -158,20 +182,20 @@ export default function PropiedadesSection() {
   
   const edificiosUnicos = usuario?.propiedades_disponibles 
     ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
-        p.edificios.map(e => e.edificio_nombre)
+        (p.edificios || []).map(e => e.edificio_nombre)
       ))]
     : [];
   
   const tiposUnicos = usuario?.propiedades_disponibles 
     ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
-        p.edificios.flatMap(e => e.modelos.map(m => m.modelo_nombre))
+        (p.edificios || []).flatMap(e => (e.modelos || []).map(m => m.modelo_nombre))
       ))]
     : [];
 
   const propiedadesEnriquecidas = propiedades.map(propiedad => {
     const modelo = usuario?.propiedades_disponibles
-      ?.flatMap(p => p.edificios)
-      ?.flatMap(e => e.modelos)
+      ?.flatMap(p => (p.edificios || []))
+      ?.flatMap(e => (e.modelos || []))
       ?.find(m => m.modelo_id === propiedad.modelo_id);
     
     return {
@@ -349,7 +373,14 @@ export default function PropiedadesSection() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {proyectosUnicos.map((proyecto, index) => {
+              {proyectosUnicos
+                .filter(proyecto => {
+                  const propiedadesProyecto = propiedades.filter(
+                    (p) => p.proyecto_nombre === proyecto
+                  );
+                  return propiedadesProyecto.length > 0; // Solo mostrar si tiene propiedades
+                })
+                .map((proyecto, index) => {
                 const propiedadesProyecto = propiedades.filter(
                   (p) => p.proyecto_nombre === proyecto
                 );

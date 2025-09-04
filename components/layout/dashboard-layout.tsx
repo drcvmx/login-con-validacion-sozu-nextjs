@@ -10,6 +10,8 @@ interface DashboardLayoutProps {
   setSidebarOpen: (open: boolean) => void;
   activeMenu: string;
   setActiveMenu: (menu: string) => void;
+  expandedSubmenus: Record<string, boolean>;
+  toggleSubmenu: (menuName: string) => void;
 }
 
 export function DashboardLayout({
@@ -18,6 +20,8 @@ export function DashboardLayout({
   setSidebarOpen,
   activeMenu,
   setActiveMenu,
+  expandedSubmenus,
+  toggleSubmenu,
 }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
@@ -25,6 +29,8 @@ export function DashboardLayout({
         sidebarOpen={sidebarOpen}
         activeMenu={activeMenu}
         setActiveMenu={setActiveMenu}
+        expandedSubmenus={expandedSubmenus}
+        toggleSubmenu={toggleSubmenu}
       />
       
       <div className={`transition-all duration-300 ${sidebarOpen ? "ml-72" : "ml-0"}`}>

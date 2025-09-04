@@ -155,8 +155,17 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
             <label className="block text-sm font-medium mb-1">Tipo de Uso</label>
             <select
               name="id_tipo_uso"
-              value={formData.id_tipo_uso || ""}
-              onChange={(e) => updateFormData("id_tipo_uso", e.target.value)}
+              value={
+                // Corregir la lógica para mapear correctamente
+                formData.id_tipo_uso !== undefined 
+                  ? String(formData.id_tipo_uso)
+                  : initialData?.id_tipo_uso 
+                    ? String(initialData.id_tipo_uso)
+                    : initialData?.tipo_uso 
+                      ? String(tiposUso.find(tipo => tipo.nombre === initialData.tipo_uso)?.id || "")
+                      : ""
+              }
+              onChange={(e) => updateFormData("id_tipo_uso", Number(e.target.value))}
               disabled={isReadOnly}
               className={`w-full p-2 border rounded ${isReadOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
             >

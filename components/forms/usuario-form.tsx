@@ -18,6 +18,10 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
   const { createUsuario, updateUsuario, loading, error } = useCrudOperations();
   const { refreshAuth } = useAuth();
 
+  // 🔍 DEBUG: Agregar console.log temporal para ver la estructura de initialData
+  console.log('UsuarioForm - initialData:', initialData);
+  console.log('UsuarioForm - initialData.rol:', initialData?.rol);
+
   const roles = [
     { id: 1, nombre: "Super Administrador" },
     { id: 2, nombre: "Gerente de cobranza" },
@@ -123,8 +127,16 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
             <label className="block text-sm font-medium mb-1">Rol</label>
             <select
               name="rol_id"
-              value={formData.rol_id || ""}
-              onChange={(e) => updateFormData("rol_id", e.target.value)}
+              value={
+                formData.rol_id !== undefined 
+                  ? String(formData.rol_id)
+                  : initialData?.rol && typeof initialData.rol === 'string'
+                    ? String(roles.find(r => r.nombre === initialData.rol)?.id || "")
+                    : initialData?.rol?.id 
+                      ? String(initialData.rol.id)
+                      : ""
+              }
+              onChange={(e) => updateFormData("rol_id", Number(e.target.value))}
               disabled={isReadOnly}
               className={`w-full p-2 border rounded ${isReadOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
             >

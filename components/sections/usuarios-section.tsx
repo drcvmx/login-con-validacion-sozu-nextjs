@@ -22,6 +22,7 @@ import { UsuarioForm } from "@/components/forms/usuario-form";
 import { useCrudOperations } from "@/hooks/use-crud-operations";
 import type { Usuario } from "@/types";
 import { toast } from "sonner";
+import { useConfirmDialog } from "@/components/ui/confirm-dialog"
 
 export default function UsuariosSection() {
   const { todosLosUsuarios, hasPermission, refreshAuth } = useAuth();
@@ -45,20 +46,26 @@ export default function UsuariosSection() {
     setShowEditForm(true);
   };
 
-  const handleDelete = async (email: string) => {
-    if (!confirm('¿Estás seguro de eliminar este usuario?')) return;
-    
-    try {
-      await deleteUsuario(email);
-      // Opcional: Mostrar toast de éxito
-      toast.success('Usuario eliminado');
-      // Recargar datos (si usas react-query, SWR, o refreshAuth)
-      refreshAuth(); 
-    } catch (error) {
-      toast.error('Error al eliminar');
-      console.error(error);
-    }
-  };
+  const { showConfirm, ConfirmDialog } = useConfirmDialog()
+  const handleDelete = async (id: number, email: string) => {
+    showConfirm({
+      title: "Eliminar Usuario",
+      description: `¿Estás seguro de que deseas eliminar el usuario "${email}"? Esta acción no se puede deshacer.`,
+      confirmText: "Eliminar",
+      cancelText: "Cancelar",
+      variant: "destructive",
+      onConfirm: async () => {
+        try {
+          await deleteUsuario(email)
+          toast.success('Usuario eliminado')
+          await refreshAuth() // Agregar re-fetch después de eliminación exitosa
+        } catch (error) {
+          console.error('Error al eliminar usuario:', error)
+          toast.error('Error al eliminar')
+        }
+      },
+    })
+  }
 
   const canAdd = hasPermission('Agregar');
   const canEdit = hasPermission('Actualizar');
@@ -191,7 +198,7 @@ export default function UsuariosSection() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDelete(user.email)}
+                          onClick={() => handleDelete(user.id, user.email)}
                           disabled={loading}
                           className="flex-1 bg-transparent hover:bg-destructive/10 hover:text-destructive"
                           title="Eliminar usuario"
@@ -304,6 +311,8 @@ export default function UsuariosSection() {
           // Aquí podrías refrescar la lista de usuarios
         }}
       />
+      
+      <ConfirmDialog />
     </div>
   );
 }

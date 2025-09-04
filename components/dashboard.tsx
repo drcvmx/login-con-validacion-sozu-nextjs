@@ -7,7 +7,14 @@ import { useMenuNavigation } from "@/hooks/use-menu-navigation";
 
 export default function SozuAdminDashboard() {
   const { usuario } = useAuth();
-  const { activeMenu, setActiveMenu, sidebarOpen, setSidebarOpen } = useMenuNavigation();
+  const { 
+    activeMenu, 
+    setActiveMenu, 
+    expandedSubmenus, 
+    toggleSubmenu, 
+    sidebarOpen, 
+    setSidebarOpen 
+  } = useMenuNavigation();
 
   if (!usuario) return null;
 
@@ -17,6 +24,8 @@ export default function SozuAdminDashboard() {
       setSidebarOpen={setSidebarOpen}
       activeMenu={activeMenu}
       setActiveMenu={setActiveMenu}
+      expandedSubmenus={expandedSubmenus}
+      toggleSubmenu={toggleSubmenu}
     >
       <SectionRouter activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
     </DashboardLayout>
