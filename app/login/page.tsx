@@ -28,7 +28,7 @@ export default function LoginPage() {
     localStorage.removeItem("userData")
 
     try {
-      const response = await fetch("https://n8n.sozu.com/webhook/loginconvalidacion", {
+      const response = await fetch("https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/loginconvalidacion", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

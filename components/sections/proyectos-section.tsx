@@ -23,7 +23,7 @@ import { ProyectoForm } from "@/components/forms/proyecto-form";
 import { useCrudOperations } from "@/hooks/use-crud-operations";
 
 export default function ProyectosSection() {
-  const { proyectos, hasPermission } = useAuth();
+  const { proyectos, hasPermission, refreshAuth } = useAuth();
   const { deleteProyecto, loading } = useCrudOperations();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -43,6 +43,7 @@ export default function ProyectosSection() {
     if (confirm('¿Estás seguro de que quieres eliminar este proyecto?')) {
       try {
         await deleteProyecto(id);
+        refreshAuth(); // Agregar esta línea
       } catch (error) {
         console.error('Error deleting project:', error);
       }
@@ -81,7 +82,7 @@ export default function ProyectosSection() {
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
-              Total Proyectos
+              Proyectos
             </CardTitle>
             <div className="p-2 bg-primary/10 rounded-lg">
               <Building2 className="h-5 w-5 text-primary" />
@@ -92,27 +93,6 @@ export default function ProyectosSection() {
               {proyectos.length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              <span>Proyectos totales</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 shadow-lg">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-muted-foreground">
-              Proyectos Activos
-            </CardTitle>
-            <div className="p-2 bg-green-500/10 rounded-lg">
-              <span className="text-2xl">✅</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-green-500 mb-1">
-              {proyectos.filter((p) => p.activo).length}
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <span>En desarrollo</span>
             </div>
           </CardContent>
         </Card>
@@ -121,7 +101,7 @@ export default function ProyectosSection() {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
-              Total Edificios
+              Edificios
             </CardTitle>
             <div className="p-2 bg-blue-500/10 rounded-lg">
               <span className="text-2xl">🏗️</span>
@@ -132,7 +112,6 @@ export default function ProyectosSection() {
               {proyectos.reduce((acc, p) => acc + p.edificios_count, 0)}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              <span>Edificios totales</span>
             </div>
           </CardContent>
         </Card>
@@ -164,7 +143,6 @@ export default function ProyectosSection() {
         </Card>
       </div>
 
-      {/* Lista de Proyectos */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {proyectos.length > 0 ? (
           proyectos.map((project, index) => (
@@ -281,7 +259,6 @@ export default function ProyectosSection() {
         )}
       </div>
 
-      {/* Análisis por Tipo de Uso */}
       {proyectos.length > 0 && (
         <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
           <CardHeader>
@@ -343,7 +320,6 @@ export default function ProyectosSection() {
         </Card>
       )}
 
-      {/* Modales CRUD */}
       <ProyectoForm
         isOpen={showCreateForm}
         onClose={() => setShowCreateForm(false)}
@@ -367,7 +343,6 @@ export default function ProyectosSection() {
         }}
       />
 
-      {/* Modal de solo lectura para Ver Proyecto */}
       <Dialog open={showViewModal} onOpenChange={setShowViewModal}>
         <DialogContent className="max-w-lg">
           <DialogHeader>

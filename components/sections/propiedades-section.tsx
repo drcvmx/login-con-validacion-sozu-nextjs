@@ -27,18 +27,38 @@ import {
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { PropiedadBase, ModeloPropiedad, PropiedadCompleta } from "@/types";
+import type { PropiedadBase, Usuario } from "@/types";
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
 import { toast } from 'sonner';
+
+/**
+ * Extrae propiedades de la estructura anidada (proyectos → edificios → modelos).
+ * @param propiedadesDisponibles Estructura anidada del backend
+ * @returns Array plano de propiedades con metadata de proyecto/edificio/modelo
+ */
+function extraerPropiedades(
+  propiedadesDisponibles: Usuario['propiedades_disponibles']
+): PropiedadBase[] {
+  return propiedadesDisponibles.flatMap(proyecto => 
+    proyecto.edificios.flatMap(edificio => 
+      edificio.modelos.flatMap(modelo => 
+        modelo.propiedades?.map(propiedad => ({
+          ...propiedad,
+          proyecto_nombre: proyecto.proyecto_nombre,
+          edificio_nombre: edificio.edificio_nombre,
+          modelo_nombre: modelo.modelo_nombre,
+        })) ?? []
+      )
+    )
+  );
+}
 
 export default function PropiedadesSection() {
   const { usuario } = useAuth();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10); // 10 items por página
-
-  // Estados para la carga masiva
+  const [itemsPerPage] = useState(10);
   const [openCarga, setOpenCarga] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -47,7 +67,6 @@ export default function PropiedadesSection() {
 
   const N8N_ENDPOINT = 'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/cargar-archivo-propiedades';
 
-  // Funciones para manejar archivos
   const onFileSelect = (f?: File) => {
     if (!f) return;
     const isValid = /\.(csv|xlsx?)$/i.test(f.name);
@@ -89,10 +108,10 @@ export default function PropiedadesSection() {
       setProgress(30);
 
       const form = new FormData();
-      form.append('archivo', file);  // Campo del archivo
+      form.append('archivo', file);
       form.append('usuario', usuario?.email || 'desconocido@sozu.com');
-      form.append('actividad', '7');  // Nuevo campo requerido
-      form.append('nombre_usuario', usuario?.nombre || 'Usuario');  // Nuevo campo requerido
+      form.append('actividad', '7');
+      form.append('nombre_usuario', usuario?.nombre || 'Usuario');
 
       const res = await fetch(N8N_ENDPOINT, {
         method: 'POST',
@@ -123,40 +142,48 @@ export default function PropiedadesSection() {
 
   if (!usuario) return null;
 
-  const propiedades = usuario.todas_las_propiedades || [];
-  
-  // Calcular propiedades paginadas
+  const propiedades = usuario?.propiedades_disponibles 
+    ? extraerPropiedades(usuario.propiedades_disponibles) 
+    : usuario?.todas_las_propiedades ?? [];
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentProperties = propiedades.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(propiedades.length / itemsPerPage);
 
-  // Estadísticas calculadas
-  const edificiosUnicos = [...new Set(propiedades.map(p => p.edificio_nombre))];
-  const proyectosUnicos = [...new Set(propiedades.map(p => p.proyecto_nombre))];
-  const tiposUnicos = [...new Set(propiedades.map(p => p.modelo_nombre))];
+  // ESTADÍSTICAS CORREGIDAS - Calcular desde la estructura completa
+  const proyectosUnicos = usuario?.propiedades_disponibles 
+    ? [...new Set(usuario.propiedades_disponibles.map(p => p.proyecto_nombre))]
+    : [];
+  
+  const edificiosUnicos = usuario?.propiedades_disponibles 
+    ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
+        p.edificios.map(e => e.edificio_nombre)
+      ))]
+    : [];
+  
+  const tiposUnicos = usuario?.propiedades_disponibles 
+    ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
+        p.edificios.flatMap(e => e.modelos.map(m => m.modelo_nombre))
+      ))]
+    : [];
 
-  const propiedadesEnriquecidas = usuario.todas_las_propiedades?.map(propiedad => {
-    // Buscar el modelo correspondiente
-    const modelo = usuario.propiedades_disponibles?.find(m => 
-      m.modelo_id === propiedad.modelo_id && 
-      m.proyecto_id === propiedad.proyecto_id
-    );
-
+  const propiedadesEnriquecidas = propiedades.map(propiedad => {
+    const modelo = usuario?.propiedades_disponibles
+      ?.flatMap(p => p.edificios)
+      ?.flatMap(e => e.modelos)
+      ?.find(m => m.modelo_id === propiedad.modelo_id);
+    
     return {
       ...propiedad,
-      recamaras: modelo?.recamaras ?? 0,       // Heredar del modelo
+      recamaras: modelo?.recamaras ?? 0,
       banos_completos: modelo?.banos_completos ?? 0,
       medio_banos: modelo?.medio_banos ?? 0,
     };
-  }) || [];
-
-  console.log('Propiedades enriquecidas:', propiedadesEnriquecidas);
-  console.log('Primera propiedad:', propiedadesEnriquecidas[0]);
+  });
 
   return (
     <div className="space-y-8 animate-slide-in">
-      {/* Botón de Carga Masiva */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Gestión de Propiedades</h2>
@@ -233,10 +260,6 @@ export default function PropiedadesSection() {
               </div>
             </Dialog.Content>
           </Dialog.Root>
-          <Button className="bg-gradient-to-r from-primary to-secondary">
-            <Plus className="w-4 h-4 mr-2" />
-            Nueva Propiedad
-          </Button>
         </div>
       </div>
 
@@ -245,7 +268,7 @@ export default function PropiedadesSection() {
         <StatsCard
           title="Proyectos"
           value={proyectosUnicos.length}
-          subtitle="Proyectos con acceso"
+          subtitle=""
           icon={Users}
           iconColor="bg-green-500/10 text-green-500"
           gradientFrom="from-green-500/5"
@@ -256,7 +279,7 @@ export default function PropiedadesSection() {
         <StatsCard
           title="Edificios"
           value={edificiosUnicos.length}
-          subtitle="Edificios únicos"
+          subtitle=""
           icon={Home}
           iconColor="bg-blue-500/10 text-blue-500"
           gradientFrom="from-blue-500/5"
@@ -267,7 +290,7 @@ export default function PropiedadesSection() {
           <StatsCard
           title="Modelos"
           value={tiposUnicos.length}
-          subtitle="Modelos diferentes"
+          subtitle=""
           icon={FileText}
           iconColor="bg-orange-500/10 text-orange-500"
           gradientFrom="from-orange-500/5"
@@ -278,7 +301,7 @@ export default function PropiedadesSection() {
         <StatsCard
           title="Propiedades"
           value={propiedades.length}
-          subtitle="Propiedades disponibles"
+          subtitle=""
           icon={Building2}
           iconColor="bg-purple-500/10 text-purple-500"
           gradientFrom="from-purple-500/5"
@@ -365,7 +388,7 @@ export default function PropiedadesSection() {
                       </div>
                       <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
                         <span className="text-muted-foreground font-medium">
-                          Tipos:
+                          Modelos:
                         </span>
                         <span className="font-bold text-green-500">
                           {tiposProyecto.length}

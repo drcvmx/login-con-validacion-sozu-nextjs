@@ -63,9 +63,26 @@ export interface Usuario {
       }>
     }>
   }
-  proyectos_acceso?: Proyecto[]
-  propiedades_disponibles?: PropiedadDisponible[]
-  todas_las_propiedades?: PropiedadBase[] | PropiedadCompleta[]; // Elegir según necesidad
+  proyectos_acceso: Proyecto[]
+  propiedades_disponibles: {
+    proyecto_id: number;
+    proyecto_nombre: string;
+    edificios: {
+      edificio_id: number;
+      edificio_nombre: string;
+      modelos: {
+        modelo_id: number;
+        modelo_nombre: string;
+        propiedades: PropiedadBase[] | null; // Propiedades específicas
+        recamaras?: number;
+        banos_completos?: number;
+        medio_banos?: number;
+      }[];
+    }[];
+  }[]
+  // Opcional: mantener temporalmente el campo obsoleto con comentario
+  /** @deprecated Usar propiedades_disponibles en su lugar */
+  todas_las_propiedades?: PropiedadBase[]; 
 }
 
 // Tipos para formularios CRUD
@@ -187,4 +204,22 @@ export interface PropiedadCompleta extends PropiedadBase {
     es_imagen: boolean;
     url: string;
   }>;
+}
+
+/**
+ * Extrae y aplana las propiedades de la estructura anidada
+ */
+export function extraerPropiedades(propiedadesDisponibles: Usuario['propiedades_disponibles']): PropiedadBase[] {
+  return propiedadesDisponibles.flatMap(proyecto => 
+    proyecto.edificios.flatMap(edificio => 
+      edificio.modelos.flatMap(modelo => 
+        modelo.propiedades?.map(propiedad => ({
+          ...propiedad,
+          proyecto_nombre: proyecto.proyecto_nombre,
+          edificio_nombre: edificio.edificio_nombre,
+          modelo_nombre: modelo.modelo_nombre,
+        })) || []
+      )
+    )
+  );
 }

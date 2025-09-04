@@ -1,21 +1,33 @@
 "use client"
 
-import { CrudModal, FormField } from "@/components/ui/crud-modal"
-import { useCrudOperations } from "@/hooks/use-crud-operations"
-import { useAuth } from "@/contexts/auth-context"
-import type { CreateProyectoForm, UpdateProyectoForm } from "@/types"
+import React from "react";
+import { CrudModal, FormField } from "@/components/ui/crud-modal";
+import { useCrudOperations } from "@/hooks/use-crud-operations";
+import { useAuth } from "@/contexts/auth-context";
+import type { CreateProyectoForm, UpdateProyectoForm } from "@/types";
 
 interface ProyectoFormProps {
-  isOpen: boolean
-  onClose: () => void
-  mode: "create" | "edit" | "view"
-  initialData?: any
-  onSuccess?: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  mode: "create" | "edit" | "view";
+  initialData?: any;
+  onSuccess?: () => void;
 }
 
 export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: ProyectoFormProps) {
-  const { createProyecto, updateProyecto, loading, error } = useCrudOperations()
-  const { refreshAuth } = useAuth()
+  const { createProyecto, updateProyecto, loading, error } = useCrudOperations();
+  const { refreshAuth } = useAuth();
+
+  const tiposUso = [
+    { id: 1, nombre: "Residencial" },
+    { id: 2, nombre: "Comercial" },
+    { id: 3, nombre: "Mixto" },
+    { id: 4, nombre: "Industrial" },
+    { id: 5, nombre: "Turístico" },
+    { id: 6, nombre: "Oficinas" },
+    { id: 7, nombre: "Retail" },
+    { id: 8, nombre: "Hotelero" },
+  ];
 
   const handleSubmit = async (formData: any) => {
     try {
@@ -28,11 +40,11 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
           longitud: Number.parseFloat(formData.longitud),
           url_logo: formData.url_logo || "",
           id_tipo_uso: Number.parseInt(formData.id_tipo_uso),
-          fecha_inicio_construccion: formData.fecha_inicio_construccion,
+          fecha_inicio_construccion: formData.fecha_inicio_construccion || new Date().toISOString().split('T')[0], // Fecha actual si no se especifica
           precio_m2_actual: Number.parseFloat(formData.precio_m2_actual),
           activo: formData.activo !== false,
-        }
-        await createProyecto(projectData)
+        };
+        await createProyecto(projectData);
       } else {
         const projectData: UpdateProyectoForm = {
           nombre: formData.nombre,
@@ -42,19 +54,19 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
           longitud: Number.parseFloat(formData.longitud),
           url_logo: formData.url_logo || "",
           id_tipo_uso: Number.parseInt(formData.id_tipo_uso),
-          fecha_inicio_construccion: formData.fecha_inicio_construccion,
+          fecha_inicio_construccion: initialData?.fecha_inicio_construccion, // Mantener la fecha original
           precio_m2_actual: Number.parseFloat(formData.precio_m2_actual),
           activo: formData.activo !== false,
-        }
-        await updateProyecto(initialData?.proyecto_id, projectData)
+        };
+        await updateProyecto(initialData?.proyecto_id, projectData);
       }
 
-      refreshAuth()
-      onSuccess?.()
+      refreshAuth();
+      onSuccess?.();
     } catch (error) {
-      console.error("Error saving proyecto:", error)
+      console.error("Error saving proyecto:", error);
     }
-  }
+  };
 
   return (
     <CrudModal
@@ -139,16 +151,23 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
             readOnly={isReadOnly}
           />
 
-          <FormField
-            label="ID Tipo de Uso"
-            name="id_tipo_uso"
-            type="number"
-            required
-            value={formData.id_tipo_uso || ""}
-            onChange={updateFormData}
-            placeholder="1"
-            readOnly={isReadOnly}
-          />
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Tipo de Uso</label>
+            <select
+              name="id_tipo_uso"
+              value={formData.id_tipo_uso || ""}
+              onChange={(e) => updateFormData("id_tipo_uso", e.target.value)}
+              disabled={isReadOnly}
+              className={`w-full p-2 border rounded ${isReadOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
+            >
+              <option value="">Selecciona un tipo de uso</option>
+              {tiposUso.map((tipo) => (
+                <option key={tipo.id} value={tipo.id}>
+                  {tipo.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <FormField
             label="Fecha de Inicio"
@@ -156,13 +175,13 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
             type="date"
             required
             value={
-              formData.fecha_inicio_construccion ||
-              (formData.fecha_inicio_construccion
-                ? new Date(formData.fecha_inicio_construccion).toISOString().split("T")[0]
-                : "")
+              mode === "create" 
+                  ? formData.fecha_inicio_construccion || new Date().toISOString().split('T')[0]
+                  : initialData?.fecha_inicio_construccion?.split('T')[0] || ""
             }
-            onChange={updateFormData}
-            readOnly={isReadOnly}
+            onChange={mode === "create" ? updateFormData : undefined}
+            readOnly={mode !== "create"}
+            disabled={mode !== "create"}
           />
 
           <FormField
@@ -176,23 +195,9 @@ export function ProyectoForm({ isOpen, onClose, mode, initialData, onSuccess }: 
             readOnly={isReadOnly}
           />
 
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="activo"
-              checked={formData.activo !== false}
-              onChange={(e) => !isReadOnly && updateFormData("activo", e.target.checked)}
-              disabled={isReadOnly}
-              className={`rounded border-gray-300 ${isReadOnly ? "cursor-not-allowed opacity-50" : ""}`}
-            />
-            <label htmlFor="activo" className="text-sm font-medium">
-              Proyecto activo
-            </label>
-          </div>
-
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">{error}</div>}
         </>
       )}
     </CrudModal>
-  )
+  );
 }

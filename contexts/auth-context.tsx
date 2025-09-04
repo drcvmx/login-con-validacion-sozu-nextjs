@@ -5,6 +5,7 @@ import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import type { Usuario, Proyecto, PropiedadBase, ModeloPropiedad } from "@/types"
+import { ApiService } from '@/lib/api-service'
 
 interface AuthContextType {
   usuario: Usuario | null;
@@ -138,11 +139,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     )
   }
 
-  const refreshAuth = () => {
-    setLoading(true)
-    loadUserData()
-  }
+  const refreshAuth = async () => {
+    setLoading(true);
+    
+    try {
+      // Obtener email del usuario actual desde localStorage
+      const currentUserData = localStorage.getItem("userData");
+      if (!currentUserData) {
+        setUsuario(null);
+        setTodosLosUsuarios([]);
+        setLoading(false);
+        return;
+      }
 
+      const parsedData = JSON.parse(currentUserData);
+      let currentEmail: string | null = null;
+
+      // Extraer email del usuario actual
+      if (Array.isArray(parsedData) && parsedData[0]?.usuario?.email) {
+        currentEmail = parsedData[0].usuario.email;
+      } else if (parsedData.usuario?.email) {
+        currentEmail = parsedData.usuario.email;
+      }
+
+      if (!currentEmail) {
+        // Si no hay email, usar datos locales como fallback
+        loadUserData();
+        return;
+      }
+
+      // Hacer petición al servidor para obtener datos actualizados
+      const freshData = await ApiService.getCurrentUserData(currentEmail);
+      
+      // Actualizar localStorage con los datos frescos
+      localStorage.setItem("userData", JSON.stringify(freshData));
+      
+      // Cargar los datos actualizados
+      loadUserData();
+      
+    } catch (error) {
+      console.error('Error refreshing auth:', error);
+      // En caso de error, usar datos locales como fallback
+      loadUserData();
+    }
+  };
   const proyectos = usuario?.proyectos_acceso || []
 
   return (

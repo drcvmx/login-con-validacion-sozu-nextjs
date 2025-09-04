@@ -1,20 +1,31 @@
 "use client"
-import { CrudModal, FormField } from "@/components/ui/crud-modal"
-import { useCrudOperations } from "@/hooks/use-crud-operations"
-import { useAuth } from "@/contexts/auth-context"
-import type { CreateUsuarioForm, UpdateUsuarioForm } from "@/types"
+
+import React from "react";
+import { CrudModal, FormField } from "@/components/ui/crud-modal";
+import { useCrudOperations } from "@/hooks/use-crud-operations";
+import { useAuth } from "@/contexts/auth-context";
+import type { CreateUsuarioForm, UpdateUsuarioForm } from "@/types";
 
 interface UsuarioFormProps {
-  isOpen: boolean
-  onClose: () => void
-  mode: "create" | "edit" | "view"
-  initialData?: any
-  onSuccess?: (newUser: CreateUsuarioForm) => void // Changed to CreateUsuarioForm
+  isOpen: boolean;
+  onClose: () => void;
+  mode: "create" | "edit" | "view";
+  initialData?: any;
+  onSuccess?: (newUser: CreateUsuarioForm) => void;
 }
 
 export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: UsuarioFormProps) {
-  const { createUsuario, updateUsuario, loading, error } = useCrudOperations()
-  const { refreshAuth } = useAuth()
+  const { createUsuario, updateUsuario, loading, error } = useCrudOperations();
+  const { refreshAuth } = useAuth();
+
+  const roles = [
+    { id: 1, nombre: "Super Administrador" },
+    { id: 2, nombre: "Gerente de cobranza" },
+    { id: 3, nombre: "Vendedor" },
+    { id: 4, nombre: "Vendedor externo" },
+    { id: 5, nombre: "Reportes" },
+    { id: 6, nombre: "Administración de comisiones" },
+  ];
 
   const handleSubmit = async (formData: any) => {
     try {
@@ -26,8 +37,8 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
           clave_pais_telefono: formData.clave_pais_telefono || "+52",
           rol_id: Number.parseInt(formData.rol_id),
           activo: formData.activo !== false,
-        }
-        await createUsuario(userData)
+        };
+        await createUsuario(userData);
       } else {
         const userData: UpdateUsuarioForm = {
           nombre: formData.nombre,
@@ -35,18 +46,16 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
           clave_pais_telefono: formData.clave_pais_telefono || "+52",
           rol_id: Number.parseInt(formData.rol_id),
           activo: formData.activo !== false,
-        }
-        await updateUsuario(initialData?.email, userData)
+        };
+        await updateUsuario(initialData?.email, userData);
       }
 
-      // Refresh auth context to get updated data
-      refreshAuth()
-      onSuccess?.(mode === "create" ? { email: formData.email, nombre: formData.nombre } : initialData) // Pass the new user data
+      refreshAuth();
+      onSuccess?.(mode === "create" ? { email: formData.email, nombre: formData.nombre } : initialData);
     } catch (error) {
-      // Error is handled by the hook
-      console.error("Error saving usuario:", error)
+      console.error("Error saving usuario:", error);
     }
-  }
+  };
 
   return (
     <CrudModal
@@ -110,34 +119,27 @@ export function UsuarioForm({ isOpen, onClose, mode, initialData, onSuccess }: U
             readOnly={isReadOnly}
           />
 
-          <FormField
-            label="ID del Rol"
-            name="rol_id"
-            type="number"
-            required
-            value={formData.rol_id || ""}
-            onChange={updateFormData}
-            placeholder="1"
-            readOnly={isReadOnly}
-          />
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="activo"
-              checked={formData.activo !== false}
-              onChange={(e) => !isReadOnly && updateFormData("activo", e.target.checked)}
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">Rol</label>
+            <select
+              name="rol_id"
+              value={formData.rol_id || ""}
+              onChange={(e) => updateFormData("rol_id", e.target.value)}
               disabled={isReadOnly}
-              className={`rounded border-gray-300 ${isReadOnly ? "cursor-not-allowed opacity-50" : ""}`}
-            />
-            <label htmlFor="activo" className="text-sm font-medium">
-              Usuario activo
-            </label>
+              className={`w-full p-2 border rounded ${isReadOnly ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
+            >
+              <option value="">Selecciona un rol</option>
+              {roles.map((rol) => (
+                <option key={rol.id} value={rol.id}>
+                  {rol.nombre}
+                </option>
+              ))}
+            </select>
           </div>
 
           {error && <div className="text-red-500 text-sm bg-red-50 p-3 rounded-md">{error}</div>}
         </>
       )}
     </CrudModal>
-  )
+  );
 }

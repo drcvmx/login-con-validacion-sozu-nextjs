@@ -108,9 +108,10 @@ interface FormFieldProps {
   type?: string
   required?: boolean
   value: any
-  onChange: (field: string, value: any) => void
-  placeholder?: string
-  readOnly?: boolean
+  onChange?: (field: string, value: any) => void; // Hacer onChange opcional
+  placeholder?: string;
+  readOnly?: boolean;
+  disabled?: boolean; // Añadir prop disabled
 }
 
 export function FormField<T>({

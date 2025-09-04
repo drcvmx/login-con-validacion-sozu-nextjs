@@ -1,0 +1,1128 @@
+[
+  {
+    "usuario": {
+      "email": "jorge.mendoza@sozu.com",
+      "nombre": "Jorge Mendoza",
+      "telefono": "7221545856",
+      "clave_pais_telefono": "+52",
+      "activo": true,
+      "rol": {
+        "id": 1,
+        "nombre": "Super Administrador",
+        "descripcion": "Acceso completo al sistema",
+        "activo": true,
+        "menus": [
+          {
+            "id": 1,
+            "nombre": "Entidades",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 1,
+                "nombre": "Administración de clientes",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              },
+              {
+                "id": 2,
+                "nombre": "Administración de empresas",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              },
+              {
+                "id": 3,
+                "nombre": "Administración de notarios",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "nombre": "Usuarios",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 4,
+                "nombre": "Administración de usuarios",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "nombre": "Propiedades",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 5,
+                "nombre": "Administración de proyectos",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 5,
+                    "nombre": "Cargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              },
+              {
+                "id": 6,
+                "nombre": "Administración de propiedades",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 5,
+                    "nombre": "Cargar información",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 6,
+                    "nombre": "Generar oferta",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 5,
+            "nombre": "Productos/Servicios",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 7,
+                "nombre": "Administración de productos/servicios",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 5,
+                    "nombre": "Cargar información",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 6,
+                    "nombre": "Generar oferta",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 6,
+            "nombre": "Cuentas de cobranza",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 8,
+                "nombre": "Administración de cuentas de cobranza",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              },
+              {
+                "id": 10,
+                "nombre": "Reportes",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 7,
+            "nombre": "Comisiones",
+            "activo": true,
+            "submenus": [
+              {
+                "id": 9,
+                "nombre": "Administración de comisiones",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 1,
+                    "nombre": "Agregar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 2,
+                    "nombre": "Eliminar",
+                    "descripcion": null,
+                    "activo": true
+                  },
+                  {
+                    "id": 3,
+                    "nombre": "Actualizar",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              },
+              {
+                "id": 11,
+                "nombre": "Reportes",
+                "activo": true,
+                "permisos": [
+                  {
+                    "id": 4,
+                    "nombre": "Descargar información",
+                    "descripcion": null,
+                    "activo": true
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "proyectos_acceso": [
+        {
+          "proyecto_id": 1,
+          "nombre": "Margot",
+          "direccion": "Av. López Mateos Sur 2375, Jardines del Country, Guadalajara, Jal.",
+          "descripcion": "Desarrollo residencial premium en zona exclusiva de Guadalajara con amenidades de lujo",
+          "latitud": 20.6597,
+          "longitud": -103.3496,
+          "url_logo": "https://example.com/logo-torre-sozu.png",
+          "tipo_uso": "Residencial",
+          "fecha_inicio_construccion": "2024-01-15T00:00:00",
+          "precio_m2_actual": 45000,
+          "activo": true,
+          "edificios_count": 1,
+          "amenidades_count": 3
+        },
+        {
+          "proyecto_id": 2,
+          "nombre": "Bottura",
+          "direccion": "Av. Américas 1500, Providencia, Guadalajara, Jal.",
+          "descripcion": "Centro de negocios moderno con oficinas ejecutivas",
+          "latitud": 20.6767,
+          "longitud": -103.3475,
+          "url_logo": "https://example.com/logo-business-center.png",
+          "tipo_uso": "Residencial",
+          "fecha_inicio_construccion": "2020-12-12T00:00:00",
+          "precio_m2_actual": 38000,
+          "activo": true,
+          "edificios_count": 1,
+          "amenidades_count": 2
+        },
+        {
+          "proyecto_id": 3,
+          "nombre": "Vive Daiku",
+          "direccion": "Av. Patria 1891, Puerta de Hierro, Zapopan, Jal.",
+          "descripcion": "Complejo residencial mixto con áreas comerciales y espacios familiares",
+          "latitud": 20.6861,
+          "longitud": -103.4194,
+          "url_logo": "https://example.com/logo-residencial-zapopan.png",
+          "tipo_uso": "Mixto",
+          "fecha_inicio_construccion": "2024-06-01T00:00:00",
+          "precio_m2_actual": 52000,
+          "activo": true,
+          "edificios_count": 1,
+          "amenidades_count": 3
+        }
+      ],
+      "propiedades_disponibles": [
+        {
+          "proyecto_id": 1,
+          "proyecto_nombre": "Margot",
+          "edificios": [
+            {
+              "edificio_id": 2,
+              "edificio_nombre": "Margot",
+              "modelos": [
+                {
+                  "modelo_id": 2,
+                  "modelo_nombre": "Gala",
+                  "descripcion": "Departamento compacto ideal para jóvenes profesionales",
+                  "recamaras": 1,
+                  "banos_completos": 1,
+                  "medio_banos": 0,
+                  "caracteristicas": [
+                    "Balcón",
+                    "Elevador",
+                    "Cocina integral"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-1rec-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-1rec-2.jpg"
+                    }
+                  ],
+                  "propiedades": null
+                },
+                {
+                  "modelo_id": 3,
+                  "modelo_nombre": "Modena",
+                  "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+                  "recamaras": 2,
+                  "banos_completos": 2,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Balcón",
+                    "Elevador",
+                    "Walk-in closet",
+                    "Cocina integral"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-2.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-3.jpg"
+                    }
+                  ],
+                  "propiedades": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "proyecto_id": 2,
+          "proyecto_nombre": "Bottura",
+          "edificios": [
+            {
+              "edificio_id": 1,
+              "edificio_nombre": "Bottura",
+              "modelos": [
+                {
+                  "modelo_id": 1,
+                  "modelo_nombre": "Estudio Premium",
+                  "descripcion": "Estudio moderno con cocina integral y balcón",
+                  "recamaras": 0,
+                  "banos_completos": 1,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Balcón",
+                    "Cocina integral",
+                    "Aire acondicionado"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/estudio-premium-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/estudio-premium-2.jpg"
+                    },
+                    {
+                      "es_imagen": false,
+                      "url": "https://example.com/modelos/estudio-premium-tour.mp4"
+                    }
+                  ],
+                  "propiedades": null
+                },
+                {
+                  "modelo_id": 5,
+                  "modelo_nombre": "Penthouse 2 Niveles",
+                  "descripcion": "Penthouse de lujo con terraza privada y jacuzzi",
+                  "recamaras": 3,
+                  "banos_completos": 3,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Terraza",
+                    "Jardín",
+                    "Cuarto de servicio",
+                    "Walk-in closet",
+                    "Cocina integral",
+                    "Vista al mar"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/penthouse-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/penthouse-terraza.jpg"
+                    },
+                    {
+                      "es_imagen": false,
+                      "url": "https://example.com/modelos/penthouse-tour.mp4"
+                    }
+                  ],
+                  "propiedades": null
+                },
+                {
+                  "modelo_id": 2,
+                  "modelo_nombre": "Gala",
+                  "descripcion": "Departamento compacto ideal para jóvenes profesionales",
+                  "recamaras": 1,
+                  "banos_completos": 1,
+                  "medio_banos": 0,
+                  "caracteristicas": [
+                    "Balcón",
+                    "Elevador",
+                    "Cocina integral"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-1rec-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-1rec-2.jpg"
+                    }
+                  ],
+                  "propiedades": [
+                    {
+                      "propiedad_id": 253,
+                      "numero_propiedad": "1410",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 254,
+                      "numero_propiedad": "1411",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 255,
+                      "numero_propiedad": "1412",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 256,
+                      "numero_propiedad": "1413",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 257,
+                      "numero_propiedad": "1414",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 258,
+                      "numero_propiedad": "1415",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 259,
+                      "numero_propiedad": "105",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 260,
+                      "numero_propiedad": "106",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 266,
+                      "numero_propiedad": "112",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 267,
+                      "numero_propiedad": "113",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 268,
+                      "numero_propiedad": "114",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 269,
+                      "numero_propiedad": "115",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 270,
+                      "numero_propiedad": "801",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 271,
+                      "numero_propiedad": "802",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 272,
+                      "numero_propiedad": "803",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 273,
+                      "numero_propiedad": "804",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 274,
+                      "numero_propiedad": "805",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 275,
+                      "numero_propiedad": "806",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 282,
+                      "numero_propiedad": "1206",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 283,
+                      "numero_propiedad": "1207",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 284,
+                      "numero_propiedad": "1208",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 285,
+                      "numero_propiedad": "901",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 286,
+                      "numero_propiedad": "902",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 287,
+                      "numero_propiedad": "903",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 288,
+                      "numero_propiedad": "904",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 289,
+                      "numero_propiedad": "905",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 290,
+                      "numero_propiedad": "906",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 291,
+                      "numero_propiedad": "907",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 292,
+                      "numero_propiedad": "908",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 293,
+                      "numero_propiedad": "909",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 294,
+                      "numero_propiedad": "910",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 295,
+                      "numero_propiedad": "201",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 302,
+                      "numero_propiedad": "996",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    }
+                  ]
+                },
+                {
+                  "modelo_id": 3,
+                  "modelo_nombre": "Modena",
+                  "descripcion": "Departamento familiar con sala, comedor y cocina integral",
+                  "recamaras": 2,
+                  "banos_completos": 2,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Balcón",
+                    "Elevador",
+                    "Walk-in closet",
+                    "Cocina integral"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-1.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-2.jpg"
+                    },
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/depto-2rec-3.jpg"
+                    }
+                  ],
+                  "propiedades": [
+                    {
+                      "propiedad_id": 261,
+                      "numero_propiedad": "107",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 262,
+                      "numero_propiedad": "108",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 263,
+                      "numero_propiedad": "109",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 264,
+                      "numero_propiedad": "110",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 265,
+                      "numero_propiedad": "111",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 276,
+                      "numero_propiedad": "807",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 277,
+                      "numero_propiedad": "808",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 279,
+                      "numero_propiedad": "810",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 280,
+                      "numero_propiedad": "1204",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 281,
+                      "numero_propiedad": "1205",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 296,
+                      "numero_propiedad": "202",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 297,
+                      "numero_propiedad": "203",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 298,
+                      "numero_propiedad": "204",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 299,
+                      "numero_propiedad": "205",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 300,
+                      "numero_propiedad": "206",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 301,
+                      "numero_propiedad": "207",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 252,
+                      "numero_propiedad": "1409",
+                      "precio_lista": 2850890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    },
+                    {
+                      "propiedad_id": 278,
+                      "numero_propiedad": "809",
+                      "precio_lista": 2990890.8,
+                      "m2_reales": 48.85,
+                      "estatus": "Disponible",
+                      "activo": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "proyecto_id": 3,
+          "proyecto_nombre": "Vive Daiku",
+          "edificios": [
+            {
+              "edificio_id": 4,
+              "edificio_nombre": "Daiku",
+              "modelos": [
+                {
+                  "modelo_id": 6,
+                  "modelo_nombre": "Parota",
+                  "descripcion": "Depa Parota",
+                  "recamaras": 0,
+                  "banos_completos": 0,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Business center",
+                    "Elevador",
+                    "Aire acondicionado"
+                  ],
+                  "multimedias": [
+                    {
+                      "es_imagen": true,
+                      "url": "https://example.com/modelos/oficina-ejecutiva.jpg"
+                    }
+                  ],
+                  "propiedades": null
+                },
+                {
+                  "modelo_id": 7,
+                  "modelo_nombre": "Cedro",
+                  "descripcion": "Depa Cedro",
+                  "recamaras": 0,
+                  "banos_completos": 1,
+                  "medio_banos": 1,
+                  "caracteristicas": [
+                    "Business center",
+                    "Elevador",
+                    "Aire acondicionado"
+                  ],
+                  "multimedias": null,
+                  "propiedades": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "proyectos_acceso": [
+      {
+        "proyecto_id": 1,
+        "nombre": "Margot",
+        "direccion": "Av. López Mateos Sur 2375, Jardines del Country, Guadalajara, Jal."
+      },
+      {
+        "proyecto_id": 2,
+        "nombre": "Bottura",
+        "direccion": "Av. Américas 1500, Providencia, Guadalajara, Jal."
+      },
+      {
+        "proyecto_id": 3,
+        "nombre": "Vive Daiku",
+        "direccion": "Av. Patria 1891, Puerta de Hierro, Zapopan, Jal."
+      }
+    ],
+    "todos_los_usuarios": [
+      {
+        "email": "drcv.work.code@gmail.com",
+        "nombre": "Dante Chavez",
+        "telefono": "722658548",
+        "clave_pais_telefono": "+52",
+        "activo": true,
+        "rol": "Gerente de cobranza"
+      },
+      {
+        "email": "eddys912sc@gmail.com",
+        "nombre": "Eduardo Peña",
+        "telefono": "7225896325",
+        "clave_pais_telefono": "+52",
+        "activo": true,
+        "rol": "Vendedor"
+      },
+      {
+        "email": "gerenteprueba@sozu.com",
+        "nombre": "Juan Santana",
+        "telefono": "2222222313",
+        "clave_pais_telefono": "+52",
+        "activo": true,
+        "rol": "Super Administrador"
+      }
+    ]
+  }
+]

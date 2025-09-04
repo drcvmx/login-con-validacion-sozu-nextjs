@@ -1,6 +1,7 @@
 // Servicio para comunicación con n8n workflows
 export class ApiService {
-  private static readonly BASE_URL = 'https://n8n.sozu.com/webhook/crud-proyectos-propiedades-usuarios';
+  private static readonly BASE_URL = 'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/crud-proyectos-propiedades-usuarios';
+  private static readonly LOGIN_URL = 'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/loginconvalidacion';
   
   // Método genérico para operaciones CRUD
   static async crudOperation<T = any>(
@@ -17,7 +18,7 @@ export class ApiService {
     };
 
     try {
-      const response = await fetch("https://n8n.sozu.com/webhook/crud-proyectos-propiedades-usuarios", {
+      const response = await fetch("https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/crud-proyectos-propiedades-usuarios", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -129,7 +130,7 @@ export class ApiService {
   // Método para login (usando el workflow existente)
   static async login(email: string) {
     try {
-      const response = await fetch(`${this.BASE_URL}/loginconvalidacion`, {
+      const response = await fetch(`https://n8n.sozu.com/webhook/loginconvalidacion`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -145,6 +146,29 @@ export class ApiService {
       return await response.json();
     } catch (error) {
       console.error('Login Error:', error);
+      throw error;
+    }
+  }
+
+  // Nuevo método para obtener datos actualizados del usuario
+  static async getCurrentUserData(email: string) {
+    try {
+      const response = await fetch(`https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/loginconvalidacion`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error obteniendo datos del usuario');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Get Current User Data Error:', error);
       throw error;
     }
   }
