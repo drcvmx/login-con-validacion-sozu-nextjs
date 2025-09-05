@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { PropertyCard } from "@/components/ui/property-card";
-import { EmptyState } from "@/components/ui/empty-state";
-import { StatsCard } from "@/components/ui/stats-card";
-import { PropertyTable } from "@/components/ui/property-table";
+} from '@/components/ui/card';
+import { PropertyCard } from '@/components/ui/property-card';
+import { EmptyState } from '@/components/ui/empty-state';
+import { StatsCard } from '@/components/ui/stats-card';
+import { PropertyTable } from '@/components/ui/property-table';
 import {
   Building2,
   Plus,
@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import type { PropiedadBase, Usuario } from "@/types";
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
@@ -38,32 +38,35 @@ import { toast } from 'sonner';
  * @returns Array plano de propiedades con metadata de proyecto/edificio/modelo
  */
 function extraerPropiedades(
-  propiedadesDisponibles: Usuario['propiedades_disponibles']
+  propiedadesDisponibles: Usuario['propiedades_disponibles'],
 ): PropiedadBase[] {
   // Validar que propiedadesDisponibles no sea null/undefined
   if (!propiedadesDisponibles || !Array.isArray(propiedadesDisponibles)) {
+    console.warn('propiedadesDisponibles es null, undefined o no es un array:', propiedadesDisponibles);
     return [];
   }
 
-  return propiedadesDisponibles.flatMap(proyecto => {
+  return propiedadesDisponibles.flatMap((proyecto) => {
     // Validar que el proyecto exista y tenga edificios
     if (!proyecto || !proyecto.edificios || !Array.isArray(proyecto.edificios)) {
+      console.warn('Proyecto sin edificios válidos:', proyecto);
       return [];
     }
-    
-    return proyecto.edificios.flatMap(edificio => {
+
+    return proyecto.edificios.flatMap((edificio) => {
       // Validar que el edificio exista y tenga modelos
       if (!edificio || !edificio.modelos || !Array.isArray(edificio.modelos)) {
         return [];
       }
-      
-      return edificio.modelos.flatMap(modelo => {
+
+      return edificio.modelos.flatMap((modelo) => {
         // Validar que el modelo exista y tenga propiedades
         if (!modelo || !modelo.propiedades || !Array.isArray(modelo.propiedades)) {
+          console.warn('Modelo sin propiedades válidas:', modelo);
           return [];
         }
-        
-        return modelo.propiedades.map(propiedad => ({
+
+        return modelo.propiedades.map((propiedad) => ({
           ...propiedad,
           proyecto_nombre: proyecto.proyecto_nombre || 'Sin Proyecto',
           edificio_nombre: edificio.edificio_nombre || 'Sin Edificio',
@@ -86,7 +89,8 @@ export default function PropiedadesSection() {
   const [progress, setProgress] = useState(0);
   const xhrRef = useRef<XMLHttpRequest | null>(null);
 
-  const N8N_ENDPOINT = 'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/cargar-archivo-propiedades';
+  const N8N_ENDPOINT =
+    'https://automatizacion-n8n.fbqqbe.easypanel.host/webhook/cargar-archivo-propiedades';
 
   const onFileSelect = (f?: File) => {
     if (!f) return;
@@ -201,59 +205,55 @@ export default function PropiedadesSection() {
 
   if (!usuario) return null;
 
-  const propiedades = usuario?.propiedades_disponibles 
-    ? extraerPropiedades(usuario.propiedades_disponibles) 
+  const propiedades = usuario?.propiedades_disponibles
+    ? extraerPropiedades(usuario.propiedades_disponibles)
     : usuario?.todas_las_propiedades ?? [];
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProperties = propiedades.slice(indexOfFirstItem, indexOfLastItem);
+  const currentProperties = propiedades.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
   const totalPages = Math.ceil(propiedades.length / itemsPerPage);
 
   // ESTADÍSTICAS CORREGIDAS - Calcular desde la estructura completa
-  const proyectosUnicos = usuario?.propiedades_disponibles 
-    ? [...new Set(usuario.propiedades_disponibles.map(p => p.proyecto_nombre))]
-    : [];
-  
-  const edificiosUnicos = usuario?.propiedades_disponibles 
-    ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
-        (p.edificios || []).map(e => e.edificio_nombre)
-      ))]
-    : [];
-  
-  const tiposUnicos = usuario?.propiedades_disponibles 
-    ? [...new Set(usuario.propiedades_disponibles.flatMap(p => 
-        (p.edificios || []).flatMap(e => (e.modelos || []).map(m => m.modelo_nombre))
-      ))]
+  const proyectosUnicos = usuario?.propiedades_disponibles
+    ? [
+        ...new Set(
+          usuario.propiedades_disponibles.map((p) => p.proyecto_nombre),
+        ),
+      ]
     : [];
 
-  const propiedadesEnriquecidas = propiedades.map(propiedad => {
+  const edificiosUnicos = usuario?.propiedades_disponibles
+    ? [
+        ...new Set(
+          usuario.propiedades_disponibles.flatMap((p) =>
+            (p.edificios || []).map((e) => e.edificio_nombre),
+          ),
+        ),
+      ]
+    : [];
+
+  const tiposUnicos = usuario?.propiedades_disponibles
+    ? [
+        ...new Set(
+          usuario.propiedades_disponibles.flatMap((p) =>
+            (p.edificios || []).flatMap((e) =>
+              (e.modelos || []).map((m) => m.modelo_nombre),
+            ),
+          ),
+        ),
+      ]
+    : [];
+
+  const propiedadesEnriquecidas = propiedades.map((propiedad) => {
     const modelo = usuario?.propiedades_disponibles
       ?.flatMap(p => (p.edificios || []))
       ?.flatMap(e => (e.modelos || []))
       ?.find(m => m.modelo_id === propiedad.modelo_id);
-
-    // Buscar información adicional del modelo incluso si no tiene propiedades asociadas
-    let recamaras = modelo?.recamaras ?? 0;
-    let banos_completos = modelo?.banos_completos ?? 0;
-    let medio_banos = modelo?.medio_banos ?? 0;
     
-    // Si no encontramos el modelo por modelo_id, buscar por nombre del modelo
-    if (!modelo || (recamaras === 0 && banos_completos === 0 && medio_banos === 0)) {
-      const modeloPorNombre = usuario?.propiedades_disponibles
-        ?.flatMap(p => (p.edificios || []))
-        ?.flatMap(e => (e.modelos || []))
-        ?.find(m => m.modelo_nombre === propiedad.modelo_nombre);
-      
-      if (modeloPorNombre) {
-        recamaras = modeloPorNombre.recamaras ?? recamaras;
-        banos_completos = modeloPorNombre.banos_completos ?? banos_completos;
-        medio_banos = modeloPorNombre.medio_banos ?? medio_banos;
-      }
-    }
-
-    console.log(`Modelo: ${propiedad.modelo_nombre}, Recámaras: ${recamaras}, Baños completos: ${banos_completos}, Medio baños: ${medio_banos}`);
-
     return {
       ...propiedad,
       recamaras,
@@ -266,19 +266,17 @@ export default function PropiedadesSection() {
     <div className="space-y-8 animate-slide-in">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Gestión de Propiedades</h2>
-          <p className="text-muted-foreground mt-1">Administra las propiedades disponibles</p>
+          <h2 className="text-2xl font-bold text-foreground">
+            Gestión de Propiedades
+          </h2>
+          <p className="text-muted-foreground mt-1">
+            Administra las propiedades disponibles
+          </p>
         </div>
         <div className="flex gap-4">
-          <Dialog.Root
-            open={openCarga}
-            onOpenChange={(v) => {
-              if (!v) resetState();
-              setOpenCarga(v);
-            }}
-          >
+          <Dialog.Root open={openCarga} onOpenChange={setOpenCarga}>
             <Dialog.Trigger asChild>
-              <Button className="cursor-pointer bg-gradient-to-r from-primary to-secondary">
+              <Button className="bg-gradient-to-r from-primary to-secondary">
                 <FileSpreadsheet className="w-4 h-4 mr-2" />
                 Carga Masiva
               </Button>
@@ -316,8 +314,7 @@ export default function PropiedadesSection() {
                 {file && (
                   <div className="mt-4">
                     <p className="text-sm">
-                      Archivo seleccionado:{' '}
-                      <span className="font-medium">{file.name}</span>
+                      Archivo seleccionado: <span className="font-medium">{file.name}</span>
                     </p>
                   </div>
                 )}
@@ -329,19 +326,17 @@ export default function PropiedadesSection() {
                         style={{ width: `${progress}%` }}
                       />
                     </Progress.Root>
-                    <p className="text-xs mt-1 text-muted-foreground">
-                      Subiendo... {progress}%
-                    </p>
+                    <p className="text-xs mt-1 text-muted-foreground">Subiendo... {progress}%</p>
                   </div>
                 )}
                 <div className="mt-6 flex justify-end gap-2">
-                  <Button variant="outline" onClick={resetState} className='cursor-pointer'>
+                  <Dialog.Close className="px-4 py-2 text-sm rounded-md border">
                     Cancelar
-                  </Button>
+                  </Dialog.Close>
                   <Button
                     onClick={subirArchivo}
                     disabled={!file || uploading}
-                    className="cursor-pointer px-4 py-2 text-sm"
+                    className="px-4 py-2 text-sm"
                   >
                     {uploading ? 'Subiendo...' : 'Subir'}
                   </Button>
@@ -375,8 +370,8 @@ export default function PropiedadesSection() {
           gradientTo="to-cyan-500/5"
           valueColor="text-blue-500"
         />
-        
-          <StatsCard
+
+        <StatsCard
           title="Modelos"
           value={tiposUnicos.length}
           subtitle=""
@@ -522,7 +517,8 @@ export default function PropiedadesSection() {
             Propiedades Disponibles
           </CardTitle>
           <CardDescription className="text-base">
-            Edificios y departamentos disponibles en tus proyectos ({propiedades.length} propiedades)
+            Edificios y departamentos disponibles en tus proyectos (
+            {propiedades.length} propiedades)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -534,12 +530,11 @@ export default function PropiedadesSection() {
               title="No hay propiedades disponibles"
               description="No tienes acceso a propiedades en este momento"
               actionLabel="Solicitar Acceso"
-              onAction={() => console.log("Solicitar acceso a propiedades")}
+              onAction={() => console.log('Solicitar acceso a propiedades')}
             />
           )}
         </CardContent>
       </Card>
-   
 
       {/* Análisis por Proyecto */}
       {propiedades.length > 0 && (
@@ -555,61 +550,63 @@ export default function PropiedadesSection() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {proyectosUnicos
-                .filter(proyecto => {
+                .filter((proyecto) => {
                   const propiedadesProyecto = propiedades.filter(
-                    (p) => p.proyecto_nombre === proyecto
+                    (p) => p.proyecto_nombre === proyecto,
                   );
                   return propiedadesProyecto.length > 0; // Solo mostrar si tiene propiedades
                 })
                 .map((proyecto, index) => {
-                const propiedadesProyecto = propiedades.filter(
-                  (p) => p.proyecto_nombre === proyecto
-                );
-                const edificiosProyecto = [
-                  ...new Set(propiedadesProyecto.map((p) => p.edificio_nombre)),
-                ];
-                const tiposProyecto = [
-                  ...new Set(propiedadesProyecto.map((p) => p.modelo_nombre)),
-                ];
+                  const propiedadesProyecto = propiedades.filter(
+                    (p) => p.proyecto_nombre === proyecto,
+                  );
+                  const edificiosProyecto = [
+                    ...new Set(
+                      propiedadesProyecto.map((p) => p.edificio_nombre),
+                    ),
+                  ];
+                  const tiposProyecto = [
+                    ...new Set(propiedadesProyecto.map((p) => p.modelo_nombre)),
+                  ];
 
-                return (
-                  <div
-                    key={proyecto}
-                    className="p-6 border border-border rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card/80 backdrop-blur-sm"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <h4 className="font-bold text-lg text-foreground mb-4">
-                      {proyecto}
-                    </h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                        <span className="text-muted-foreground font-medium">
-                          Propiedades:
-                        </span>
-                        <span className="font-bold text-primary">
-                          {propiedadesProyecto.length}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                        <span className="text-muted-foreground font-medium">
-                          Edificios:
-                        </span>
-                        <span className="font-bold text-secondary">
-                          {edificiosProyecto.length}
-                        </span>
-                      </div>
-                      <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
-                        <span className="text-muted-foreground font-medium">
-                          Modelos:
-                        </span>
-                        <span className="font-bold text-green-500">
-                          {tiposProyecto.length}
-                        </span>
+                  return (
+                    <div
+                      key={proyecto}
+                      className="p-6 border border-border rounded-2xl hover:shadow-lg transition-all duration-300 hover:scale-[1.02] bg-card/80 backdrop-blur-sm"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <h4 className="font-bold text-lg text-foreground mb-4">
+                        {proyecto}
+                      </h4>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                          <span className="text-muted-foreground font-medium">
+                            Propiedades:
+                          </span>
+                          <span className="font-bold text-primary">
+                            {propiedadesProyecto.length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                          <span className="text-muted-foreground font-medium">
+                            Edificios:
+                          </span>
+                          <span className="font-bold text-secondary">
+                            {edificiosProyecto.length}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center p-3 bg-muted/50 rounded-lg">
+                          <span className="text-muted-foreground font-medium">
+                            Modelos:
+                          </span>
+                          <span className="font-bold text-green-500">
+                            {tiposProyecto.length}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </CardContent>
         </Card>
