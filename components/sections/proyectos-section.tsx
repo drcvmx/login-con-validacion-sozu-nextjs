@@ -332,6 +332,122 @@ export default function ProyectosSection() {
         </Card>
       )}
 
+        
+       {/* Nueva Sección: Edificios */}
+      {edificiosUnicos.length > 0 && (
+        <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <Home className="w-6 h-6 text-blue-500" />
+              Edificios Disponibles
+            </CardTitle>
+            <CardDescription>
+              Información detallada de todos los edificios ({edificiosUnicos.length} edificios)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {edificiosUnicos.map((edificioNombre, index) => {
+                // Obtener información del edificio
+                const edificioInfo = usuario?.propiedades_disponibles
+                  ?.flatMap(p => p.edificios || [])
+                  ?.find(e => e.edificio_nombre === edificioNombre);
+                
+                // Contar propiedades en este edificio
+                const propiedadesEdificio = propiedades.filter(
+                  p => p.edificio_nombre === edificioNombre
+                );
+                
+                // Obtener modelos únicos en este edificio
+                const modelosEdificio = [...new Set(
+                  propiedadesEdificio.map(p => p.modelo_nombre)
+                )];
+                
+                // Obtener proyecto del edificio
+                const proyectoEdificio = usuario?.propiedades_disponibles
+                  ?.find(p => p.edificios?.some(e => e.edificio_nombre === edificioNombre))
+                  ?.proyecto_nombre || 'Sin Proyecto';
+
+                return (
+                  <div
+                    key={edificioNombre}
+                    className="group p-6 border border-border rounded-2xl hover:shadow-xl transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-blue-500/5 to-cyan-500/5 hover:from-blue-500/10 hover:to-cyan-500/10"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-3 bg-blue-500/10 rounded-xl group-hover:bg-blue-500/20 transition-colors">
+                          <Home className="w-6 h-6 text-blue-500" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-lg text-foreground">
+                            {edificioNombre}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            {proyectoEdificio}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-blue-500">
+                          {propiedadesEdificio.length}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Propiedades
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          ID Edificio:
+                        </span>
+                        <span className="text-sm font-bold text-foreground">
+                          {edificioInfo?.edificio_id || 'N/A'}
+                        </span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
+                        <span className="text-sm font-medium text-muted-foreground">
+                          Modelos:
+                        </span>
+                        <span className="text-sm font-bold text-secondary">
+                          {modelosEdificio.length}
+                        </span>
+                      </div>
+                      
+                      {modelosEdificio.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-xs font-medium text-muted-foreground mb-2">
+                            Modelos disponibles:
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {modelosEdificio.slice(0, 3).map(modelo => (
+                              <span
+                                key={modelo}
+                                className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20"
+                              >
+                                {modelo}
+                              </span>
+                            ))}
+                            {modelosEdificio.length > 3 && (
+                              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-muted text-muted-foreground">
+                                +{modelosEdificio.length - 3} más
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <ProyectoForm
         isOpen={showCreateForm}
         onClose={() => setShowCreateForm(false)}

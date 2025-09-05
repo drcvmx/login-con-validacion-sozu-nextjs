@@ -228,7 +228,7 @@ export default function UsuariosSection() {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-sm font-semibold text-muted-foreground">
-              Total Usuarios
+              Usuarios
             </CardTitle>
             <div className="p-2 bg-blue-500/10 rounded-lg">
               <span className="text-2xl">👥</span>
@@ -239,27 +239,7 @@ export default function UsuariosSection() {
               {todosLosUsuarios?.length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              <span>Usuarios registrados</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-[1.02] border-0 shadow-lg">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5" />
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-            <CardTitle className="text-sm font-semibold text-muted-foreground">
-              Usuarios Activos
-            </CardTitle>
-            <div className="p-2 bg-green-500/10 rounded-lg">
-              <span className="text-2xl">✅</span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-green-500 mb-1">
-              {todosLosUsuarios?.filter(u => u.activo).length}
-            </div>
-            <div className="flex items-center text-xs text-muted-foreground">
-              <span>Usuarios activos</span>
+              <span></span>
             </div>
           </CardContent>
         </Card>
@@ -280,7 +260,7 @@ export default function UsuariosSection() {
                 typeof u.rol === 'string' ? u.rol : u.rol?.nombre))].length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              <span>Roles diferentes</span>
+              
             </div>
           </CardContent>
         </Card>
