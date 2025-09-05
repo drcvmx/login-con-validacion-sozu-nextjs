@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import type { PropiedadBase, Usuario } from "@/types";
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
@@ -248,12 +248,33 @@ export default function PropiedadesSection() {
       ]
     : [];
 
-  const propiedadesEnriquecidas = propiedades.map((propiedad) => {
+  const propiedadesEnriquecidas = propiedades.map(propiedad => {
     const modelo = usuario?.propiedades_disponibles
       ?.flatMap(p => (p.edificios || []))
       ?.flatMap(e => (e.modelos || []))
       ?.find(m => m.modelo_id === propiedad.modelo_id);
+
+    // Buscar información adicional del modelo incluso si no tiene propiedades asociadas
+    let recamaras = modelo?.recamaras ?? 0;
+    let banos_completos = modelo?.banos_completos ?? 0;
+    let medio_banos = modelo?.medio_banos ?? 0;
     
+    // Si no encontramos el modelo por modelo_id, buscar por nombre del modelo
+    if (!modelo || (recamaras === 0 && banos_completos === 0 && medio_banos === 0)) {
+      const modeloPorNombre = usuario?.propiedades_disponibles
+        ?.flatMap(p => (p.edificios || []))
+        ?.flatMap(e => (e.modelos || []))
+        ?.find(m => m.modelo_nombre === propiedad.modelo_nombre);
+      
+      if (modeloPorNombre) {
+        recamaras = modeloPorNombre.recamaras ?? recamaras;
+        banos_completos = modeloPorNombre.banos_completos ?? banos_completos;
+        medio_banos = modeloPorNombre.medio_banos ?? medio_banos;
+      }
+    }
+
+    console.log(`Modelo: ${propiedad.modelo_nombre}, Recámaras: ${recamaras}, Baños completos: ${banos_completos}, Medio baños: ${medio_banos}`);
+
     return {
       ...propiedad,
       recamaras,

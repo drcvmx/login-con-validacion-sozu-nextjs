@@ -17,20 +17,74 @@ import {
   Eye,
   Edit,
   Trash2,
+  Home,
 } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import { ProyectoForm } from "@/components/forms/proyecto-form";
 import { useCrudOperations } from "@/hooks/use-crud-operations";
 import { useConfirmDialog } from "@/components/ui/confirm-dialog"
 import { toast } from "sonner"
+import type { PropiedadBase, Usuario } from "@/types";
+
+/**
+ * Extrae propiedades de la estructura anidada (proyectos → edificios → modelos).
+ */
+function extraerPropiedades(
+  propiedadesDisponibles: Usuario['propiedades_disponibles'],
+): PropiedadBase[] {
+  if (!propiedadesDisponibles || !Array.isArray(propiedadesDisponibles)) {
+    return [];
+  }
+
+  return propiedadesDisponibles.flatMap((proyecto) => {
+    if (!proyecto || !proyecto.edificios || !Array.isArray(proyecto.edificios)) {
+      return [];
+    }
+
+    return proyecto.edificios.flatMap((edificio) => {
+      if (!edificio || !edificio.modelos || !Array.isArray(edificio.modelos)) {
+        return [];
+      }
+
+      return edificio.modelos.flatMap((modelo) => {
+        if (!modelo || !modelo.propiedades || !Array.isArray(modelo.propiedades)) {
+          return [];
+        }
+
+        return modelo.propiedades.map((propiedad) => ({
+          ...propiedad,
+          proyecto_nombre: proyecto.proyecto_nombre || 'Sin Proyecto',
+          edificio_nombre: edificio.edificio_nombre || 'Sin Edificio',
+          modelo_nombre: modelo.modelo_nombre || 'Sin Modelo',
+        }));
+      });
+    });
+  });
+}
 
 export default function ProyectosSection() {
-  const { proyectos, hasPermission, refreshAuth } = useAuth();
+  const { proyectos, hasPermission, refreshAuth, usuario } = useAuth();
   const { deleteProyecto, loading } = useCrudOperations();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  // Extraer propiedades y calcular edificios únicos
+  const propiedades = usuario?.propiedades_disponibles
+    ? extraerPropiedades(usuario.propiedades_disponibles)
+    : usuario?.todas_las_propiedades ?? [];
+
+  const edificiosUnicos = usuario?.propiedades_disponibles
+    ? [
+        ...new Set(
+          usuario.propiedades_disponibles.flatMap((p) =>
+            (p.edificios || []).map((e) => e.edificio_nombre),
+          ),
+        ),
+      ]
+    : [];
+
   const handleView = (project: any) => {
     setSelectedProject(project);
     setShowViewModal(true);
