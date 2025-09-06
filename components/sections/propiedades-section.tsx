@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState, useMemo, useRef } from 'react';
+import { permisosByMenuFromLS, type PermisosByMenu } from '@/lib/permisos-ls';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,11 +25,10 @@ import {
   FileSpreadsheet,
   UploadCloud,
   X,
-} from "lucide-react";
-import { useAuth } from "@/contexts/auth-context";
-import { useRouter } from "next/navigation";
-import { useState, useRef } from "react";
-import type { PropiedadBase, Usuario } from "@/types";
+} from 'lucide-react';
+import { useAuth } from '@/contexts/auth-context';
+import { useRouter } from 'next/navigation';
+import type { PropiedadBase, Usuario } from '@/types';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
 import { toast } from 'sonner';
@@ -42,13 +43,20 @@ function extraerPropiedades(
 ): PropiedadBase[] {
   // Validar que propiedadesDisponibles no sea null/undefined
   if (!propiedadesDisponibles || !Array.isArray(propiedadesDisponibles)) {
-    console.warn('propiedadesDisponibles es null, undefined o no es un array:', propiedadesDisponibles);
+    console.warn(
+      'propiedadesDisponibles es null, undefined o no es un array:',
+      propiedadesDisponibles,
+    );
     return [];
   }
 
   return propiedadesDisponibles.flatMap((proyecto) => {
     // Validar que el proyecto exista y tenga edificios
-    if (!proyecto || !proyecto.edificios || !Array.isArray(proyecto.edificios)) {
+    if (
+      !proyecto ||
+      !proyecto.edificios ||
+      !Array.isArray(proyecto.edificios)
+    ) {
       console.warn('Proyecto sin edificios válidos:', proyecto);
       return [];
     }
@@ -61,7 +69,11 @@ function extraerPropiedades(
 
       return edificio.modelos.flatMap((modelo) => {
         // Validar que el modelo exista y tenga propiedades
-        if (!modelo || !modelo.propiedades || !Array.isArray(modelo.propiedades)) {
+        if (
+          !modelo ||
+          !modelo.propiedades ||
+          !Array.isArray(modelo.propiedades)
+        ) {
           console.warn('Modelo sin propiedades válidas:', modelo);
           return [];
         }
@@ -248,24 +260,27 @@ export default function PropiedadesSection() {
       ]
     : [];
 
-  const propiedadesEnriquecidas = propiedades.map(propiedad => {
+  const propiedadesEnriquecidas = propiedades.map((propiedad) => {
     const modelo = usuario?.propiedades_disponibles
-      ?.flatMap(p => (p.edificios || []))
-      ?.flatMap(e => (e.modelos || []))
-      ?.find(m => m.modelo_id === propiedad.modelo_id);
+      ?.flatMap((p) => p.edificios || [])
+      ?.flatMap((e) => e.modelos || [])
+      ?.find((m) => m.modelo_id === propiedad.modelo_id);
 
     // Buscar información adicional del modelo incluso si no tiene propiedades asociadas
     let recamaras = modelo?.recamaras ?? 0;
     let banos_completos = modelo?.banos_completos ?? 0;
     let medio_banos = modelo?.medio_banos ?? 0;
-    
+
     // Si no encontramos el modelo por modelo_id, buscar por nombre del modelo
-    if (!modelo || (recamaras === 0 && banos_completos === 0 && medio_banos === 0)) {
+    if (
+      !modelo ||
+      (recamaras === 0 && banos_completos === 0 && medio_banos === 0)
+    ) {
       const modeloPorNombre = usuario?.propiedades_disponibles
-        ?.flatMap(p => (p.edificios || []))
-        ?.flatMap(e => (e.modelos || []))
-        ?.find(m => m.modelo_nombre === propiedad.modelo_nombre);
-      
+        ?.flatMap((p) => p.edificios || [])
+        ?.flatMap((e) => e.modelos || [])
+        ?.find((m) => m.modelo_nombre === propiedad.modelo_nombre);
+
       if (modeloPorNombre) {
         recamaras = modeloPorNombre.recamaras ?? recamaras;
         banos_completos = modeloPorNombre.banos_completos ?? banos_completos;
@@ -273,7 +288,9 @@ export default function PropiedadesSection() {
       }
     }
 
-    console.log(`Modelo: ${propiedad.modelo_nombre}, Recámaras: ${recamaras}, Baños completos: ${banos_completos}, Medio baños: ${medio_banos}`);
+    console.log(
+      `Modelo: ${propiedad.modelo_nombre}, Recámaras: ${recamaras}, Baños completos: ${banos_completos}, Medio baños: ${medio_banos}`,
+    );
 
     return {
       ...propiedad,
@@ -282,6 +299,21 @@ export default function PropiedadesSection() {
       medio_banos,
     };
   });
+
+  const [permisosByMenu, setPermisosByMenu] = useState<PermisosByMenu>({});
+  useEffect(() => {
+    setPermisosByMenu(permisosByMenuFromLS());
+  }, []);
+
+  // Menu/Submenú que controla esta vista
+  const MENU = 'Propiedades';
+  const SUBMENU = 'Administración de propiedades'; // ajusta si esta pantalla es otro submenú
+
+  // Pasaremos TODO el objeto del menú (para que PropertyTable pueda tomar por submenú)
+  const permisosTabla = useMemo(
+    () => permisosByMenu[MENU] ?? {},
+    [permisosByMenu],
+  );
 
   return (
     <div className="space-y-8 animate-slide-in">
@@ -335,7 +367,8 @@ export default function PropiedadesSection() {
                 {file && (
                   <div className="mt-4">
                     <p className="text-sm">
-                      Archivo seleccionado: <span className="font-medium">{file.name}</span>
+                      Archivo seleccionado:{' '}
+                      <span className="font-medium">{file.name}</span>
                     </p>
                   </div>
                 )}
@@ -347,7 +380,9 @@ export default function PropiedadesSection() {
                         style={{ width: `${progress}%` }}
                       />
                     </Progress.Root>
-                    <p className="text-xs mt-1 text-muted-foreground">Subiendo... {progress}%</p>
+                    <p className="text-xs mt-1 text-muted-foreground">
+                      Subiendo... {progress}%
+                    </p>
                   </div>
                 )}
                 <div className="mt-6 flex justify-end gap-2">
@@ -415,8 +450,7 @@ export default function PropiedadesSection() {
         />
       </div>
 
-      
-       {/* Nueva Sección: Edificios */}
+      {/* Nueva Sección: Edificios */}
       {edificiosUnicos.length > 0 && (
         <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
           <CardHeader>
@@ -425,7 +459,8 @@ export default function PropiedadesSection() {
               Edificios Disponibles
             </CardTitle>
             <CardDescription>
-              Información detallada de todos los edificios ({edificiosUnicos.length} edificios)
+              Información detallada de todos los edificios (
+              {edificiosUnicos.length} edificios)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -433,23 +468,26 @@ export default function PropiedadesSection() {
               {edificiosUnicos.map((edificioNombre, index) => {
                 // Obtener información del edificio
                 const edificioInfo = usuario?.propiedades_disponibles
-                  ?.flatMap(p => p.edificios || [])
-                  ?.find(e => e.edificio_nombre === edificioNombre);
-                
+                  ?.flatMap((p) => p.edificios || [])
+                  ?.find((e) => e.edificio_nombre === edificioNombre);
+
                 // Contar propiedades en este edificio
                 const propiedadesEdificio = propiedades.filter(
-                  p => p.edificio_nombre === edificioNombre
+                  (p) => p.edificio_nombre === edificioNombre,
                 );
-                
+
                 // Obtener modelos únicos en este edificio
-                const modelosEdificio = [...new Set(
-                  propiedadesEdificio.map(p => p.modelo_nombre)
-                )];
-                
+                const modelosEdificio = [
+                  ...new Set(propiedadesEdificio.map((p) => p.modelo_nombre)),
+                ];
+
                 // Obtener proyecto del edificio
-                const proyectoEdificio = usuario?.propiedades_disponibles
-                  ?.find(p => p.edificios?.some(e => e.edificio_nombre === edificioNombre))
-                  ?.proyecto_nombre || 'Sin Proyecto';
+                const proyectoEdificio =
+                  usuario?.propiedades_disponibles?.find((p) =>
+                    p.edificios?.some(
+                      (e) => e.edificio_nombre === edificioNombre,
+                    ),
+                  )?.proyecto_nombre || 'Sin Proyecto';
 
                 return (
                   <div
@@ -480,7 +518,7 @@ export default function PropiedadesSection() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <span className="text-sm font-medium text-muted-foreground">
@@ -490,7 +528,7 @@ export default function PropiedadesSection() {
                           {edificioInfo?.edificio_id || 'N/A'}
                         </span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <span className="text-sm font-medium text-muted-foreground">
                           Modelos:
@@ -499,14 +537,14 @@ export default function PropiedadesSection() {
                           {modelosEdificio.length}
                         </span>
                       </div>
-                      
+
                       {modelosEdificio.length > 0 && (
                         <div className="mt-4">
                           <p className="text-xs font-medium text-muted-foreground mb-2">
                             Modelos disponibles:
                           </p>
                           <div className="flex flex-wrap gap-1">
-                            {modelosEdificio.slice(0, 3).map(modelo => (
+                            {modelosEdificio.slice(0, 3).map((modelo) => (
                               <span
                                 key={modelo}
                                 className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20"
@@ -544,7 +582,30 @@ export default function PropiedadesSection() {
         </CardHeader>
         <CardContent>
           {currentProperties.length > 0 ? (
-            <PropertyTable propiedades={propiedadesEnriquecidas} />
+            <PropertyTable
+              propiedades={propiedadesEnriquecidas} // lo que ya tenías
+              permisos={permisosTabla} // { [Submenú]: ['Actualizar','Eliminar', ...] }
+              submenuActivo={SUBMENU} // para que tome SOLO ese submenú
+              // tus handlers por fila (si ya los tenías, déjalos)
+              onAgregar={(prop) => {
+                /* ... */
+              }}
+              onCargarInfo={(prop) => {
+                /* ... */
+              }}
+              onDescargarInfo={(prop) => {
+                /* ... */
+              }}
+              onActualizar={(prop) => {
+                /* ... */
+              }}
+              onEliminar={(prop) => {
+                /* ... */
+              }}
+              onGenerarOferta={(prop) => {
+                /* ... */
+              }}
+            />
           ) : (
             <EmptyState
               icon={Building2}
@@ -633,8 +694,6 @@ export default function PropiedadesSection() {
         </Card>
       )}
 
-     
-
       {/* Nueva Sección: Modelos */}
       {tiposUnicos.length > 0 && (
         <Card className="border-0 shadow-xl bg-card/50 backdrop-blur-sm">
@@ -644,7 +703,8 @@ export default function PropiedadesSection() {
               Modelos Disponibles
             </CardTitle>
             <CardDescription>
-              Información detallada de todos los modelos de propiedades ({tiposUnicos.length} modelos)
+              Información detallada de todos los modelos de propiedades (
+              {tiposUnicos.length} modelos)
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -652,24 +712,24 @@ export default function PropiedadesSection() {
               {tiposUnicos.map((modeloNombre, index) => {
                 // Obtener información completa del modelo
                 const modeloInfo = usuario?.propiedades_disponibles
-                  ?.flatMap(p => p.edificios || [])
-                  ?.flatMap(e => e.modelos || [])
-                  ?.find(m => m.modelo_nombre === modeloNombre);
-                
+                  ?.flatMap((p) => p.edificios || [])
+                  ?.flatMap((e) => e.modelos || [])
+                  ?.find((m) => m.modelo_nombre === modeloNombre);
+
                 // Contar propiedades de este modelo
                 const propiedadesModelo = propiedades.filter(
-                  p => p.modelo_nombre === modeloNombre
+                  (p) => p.modelo_nombre === modeloNombre,
                 );
-                
+
                 // Obtener edificios que tienen este modelo
-                const edificiosConModelo = [...new Set(
-                  propiedadesModelo.map(p => p.edificio_nombre)
-                )];
-                
+                const edificiosConModelo = [
+                  ...new Set(propiedadesModelo.map((p) => p.edificio_nombre)),
+                ];
+
                 // Obtener proyectos que tienen este modelo
-                const proyectosConModelo = [...new Set(
-                  propiedadesModelo.map(p => p.proyecto_nombre)
-                )];
+                const proyectosConModelo = [
+                  ...new Set(propiedadesModelo.map((p) => p.proyecto_nombre)),
+                ];
 
                 return (
                   <div
@@ -700,7 +760,7 @@ export default function PropiedadesSection() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Información de recámaras y baños */}
                     <div className="grid grid-cols-3 gap-3 mb-4">
                       <div className="text-center p-3 bg-card/60 rounded-lg border border-border/50">
@@ -711,7 +771,7 @@ export default function PropiedadesSection() {
                           Recámaras
                         </div>
                       </div>
-                      
+
                       <div className="text-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <div className="text-lg font-bold text-accent">
                           {modeloInfo?.banos_completos ?? 0}
@@ -720,7 +780,7 @@ export default function PropiedadesSection() {
                           Baños
                         </div>
                       </div>
-                      
+
                       <div className="text-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <div className="text-lg font-bold text-chart-1">
                           {modeloInfo?.medio_banos ?? 0}
@@ -730,7 +790,7 @@ export default function PropiedadesSection() {
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="space-y-3">
                       <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <span className="text-sm font-medium text-muted-foreground">
@@ -740,7 +800,7 @@ export default function PropiedadesSection() {
                           {edificiosConModelo.length}
                         </span>
                       </div>
-                      
+
                       <div className="flex justify-between items-center p-3 bg-card/60 rounded-lg border border-border/50">
                         <span className="text-sm font-medium text-muted-foreground">
                           Proyectos:
@@ -749,7 +809,7 @@ export default function PropiedadesSection() {
                           {proyectosConModelo.length}
                         </span>
                       </div>
-                      
+
                       {/* Lista de proyectos */}
                       {proyectosConModelo.length > 0 && (
                         <div className="mt-4">
@@ -757,7 +817,7 @@ export default function PropiedadesSection() {
                             Disponible en:
                           </p>
                           <div className="flex flex-wrap gap-1">
-                            {proyectosConModelo.slice(0, 2).map(proyecto => (
+                            {proyectosConModelo.slice(0, 2).map((proyecto) => (
                               <span
                                 key={proyecto}
                                 className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-500/10 text-green-500 border border-green-500/20"
